@@ -43,29 +43,66 @@ function Features() {
   ];
 
   return (
-    <section className="w-full py-28 bg-white">
+    <section
+      id="features"
+      className="w-full py-28 bg-gradient-to-b from-white via-blue-50/40 to-white relative overflow-hidden"
+    >
       <Container>
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold">Everything Your School Needs</h2>
+        {/* heading */}
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+            Everything Your School Needs
+          </h2>
 
-          <p className="mt-4 text-gray-600">
-            Powerful tools to simplify school administration.
+          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+            Powerful modern tools designed to simplify school management and
+            improve productivity.
           </p>
         </div>
 
+        {/* grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((f, index) => (
             <div
               key={index}
-              className="p-8 bg-blue-50
-               rounded-xl shadow-sm hover:shadow-lg transition"
+              className="group relative p-8 rounded-2xl 
+                         bg-white/60 backdrop-blur-xl
+                         border border-white/40
+                         shadow-sm hover:shadow-2xl
+                         hover:-translate-y-2
+                         transition-all duration-300"
             >
-              <div className="p-3 bg-blue-50 rounded-lg w-fit mb-4">
-                <f.icon className="w-10 h-10 text-blue-600 mb-4" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">{f.title}</h3>
+              {/* gradient glow */}
+              <div className="absolute inset-0 bg-gradient-to-br 
+                              from-blue-500/0 via-indigo-500/0 to-purple-500/0
+                              group-hover:from-blue-500/10
+                              group-hover:via-indigo-500/10
+                              group-hover:to-purple-500/10
+                              rounded-2xl transition" />
 
-              <p className="text-gray-600">{f.desc}</p>
+              {/* content */}
+              <div className="relative z-10">
+                
+                {/* icon */}
+                <div
+                  className="w-14 h-14 rounded-xl 
+                             bg-gradient-to-br from-blue-500 to-indigo-600
+                             flex items-center justify-center
+                             shadow-lg mb-6"
+                >
+                  <f.icon className="w-7 h-7 text-white" />
+                </div>
+
+                {/* title */}
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {f.title}
+                </h3>
+
+                {/* description */}
+                <p className="text-gray-600 leading-relaxed">
+                  {f.desc}
+                </p>
+              </div>
             </div>
           ))}
         </div>

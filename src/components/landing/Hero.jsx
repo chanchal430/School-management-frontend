@@ -1,39 +1,37 @@
-import Container from "../common/Container"
+import { ArrowRight } from "lucide-react";
 
 function Hero() {
   return (
-    <section className="w-full bg-gradient-to-b from-blue-50 to-white py-28">
-      <Container>
+    <section className="relative w-full py-32 overflow-hidden">
+      {/* gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-white to-blue-50"></div>
 
-        <div className="text-center max-w-3xl mx-auto">
+      {/* floating blur circles */}
+      <div className="absolute top-10 left-20 w-72 h-72 bg-blue-200 rounded-full blur-3xl opacity-40"></div>
+      <div className="absolute bottom-10 right-20 w-72 h-72 bg-sky-200 rounded-full blur-3xl opacity-40"></div>
 
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-            The Smart Way to
-            <span className="text-blue-600"> Manage Schools</span>
-          </h1>
+      <div className="relative max-w-7xl mx-auto px-6 text-center">
+        <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+          The Smart Platform to
+          <span className="text-primary"> Manage Schools</span>
+        </h1>
 
-          <p className="mt-6 text-lg text-gray-600">
-            Manage students, teachers, attendance, exams and communication
-            all in one powerful platform.
-          </p>
+        <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+          Simplify student management, attendance, exams and communication with
+          one powerful system.
+        </p>
 
-          <div className="mt-10 flex justify-center gap-4">
+        <div className="mt-10 flex justify-center gap-4">
+          <button className="flex items-center gap-2 bg-primary text-white px-7 py-3 rounded-lg hover:bg-blue-700 transition">
+            Get Started
+            <ArrowRight size={18} />
+          </button>
 
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg">
-              Start Free Trial
-            </button>
-
-            <button className="border px-6 py-3 rounded-lg">
-              Book Demo
-            </button>
-
-          </div>
-
+          <button className="px-7 py-3 border rounded-lg">Book Demo</button>
         </div>
-
-      </Container>
+      </div>
     </section>
-  )
+  );
 }
 
-export default Hero
+export default Hero;

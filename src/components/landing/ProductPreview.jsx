@@ -1,4 +1,4 @@
-import dashboard from "../../assests/dashboard.png";
+import dashboard from "../../assets/dashboard.png";
 
 function ProductPreview() {
   return (

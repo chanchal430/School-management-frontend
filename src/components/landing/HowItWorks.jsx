@@ -20,7 +20,7 @@ function HowItWorks() {
   ]
 
   return (
-    <section className="w-full py-24 bg-gray-50">
+    <section id="how-it-works" className="w-full py-24 bg-gray-50">
 
       <div className="max-w-7xl mx-auto px-6">
 
