@@ -28,7 +28,7 @@ function Benefits() {
     <section id="benefits" className="w-full py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold">
+          <h2 className="text-4xl font-bold text-gray-900">
             Why Schools Choose Our Platform
           </h2>
 

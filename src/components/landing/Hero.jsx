@@ -11,7 +11,7 @@ function Hero() {
       <div className="absolute bottom-10 right-20 w-72 h-72 bg-sky-200 rounded-full blur-3xl opacity-40"></div>
 
       <div className="relative max-w-7xl mx-auto px-6 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+        <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
           The Smart Platform to
           <span className="text-primary"> Manage Schools</span>
         </h1>

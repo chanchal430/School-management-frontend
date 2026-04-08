@@ -6,7 +6,7 @@ function ProductPreview() {
 
       <div className="max-w-7xl mx-auto px-6 text-center">
 
-        <h2 className="text-4xl font-bold mb-6">
+        <h2 className="text-4xl font-bold text-gray-900 mb-6 ">
           One Dashboard For Everything
         </h2>
 

@@ -26,7 +26,7 @@ function HowItWorks() {
 
         <div className="text-center mb-16">
 
-          <h2 className="text-4xl font-bold">
+          <h2 className="text-4xl font-bold text-gray-900">
             How It Works
           </h2>
 
