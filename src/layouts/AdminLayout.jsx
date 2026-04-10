@@ -1,25 +1,40 @@
 import { useState, useRef, useEffect } from "react";
-import { Outlet, Navigate, useNavigate } from "react-router-dom";
+import { Outlet, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import {
-  UserCircle,
   LogOut,
   User,
   Settings,
   Calendar,
   ChevronDown,
   LayoutDashboard,
-  Users,
-  UserCheck,
-  DollarSign,
-  FileText,
+  Building2,
+  CreditCard,
+  GraduationCap,
+  TrendingUp,
+  TrendingDown,
+  ClipboardCheck,
+  BookOpen,
+  Users2,
+  PencilLine,
+  Library,
+  Bus,
+  FileBarChart,
+  Mail,
+  ClipboardList,
+  ShoppingBag,
+  Image,
+  Wallet,
+  Bell,
+  Search,
 } from "lucide-react";
 
 export default function AdminLayout() {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -43,115 +58,135 @@ export default function AdminLayout() {
     navigate("/");
   };
 
+  const navItems = [
+    { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
+    { icon: Building2, label: "Front Office", path: "/admin/front-office" },
+    { icon: CreditCard, label: "Fees Collection", path: "/admin/fees" },
+    { icon: GraduationCap, label: "Student Information", path: "/admin/students" },
+    { icon: TrendingUp, label: "Income", path: "/admin/income" },
+    { icon: TrendingDown, label: "Expense", path: "/admin/expense" },
+    { icon: ClipboardCheck, label: "Attendance", path: "/admin/attendance" },
+    { icon: BookOpen, label: "Academics", path: "/admin/academics" },
+    { icon: Users2, label: "Human Resource", path: "/admin/hr" },
+    { icon: PencilLine, label: "Homework", path: "/admin/homework" },
+    { icon: Library, label: "Library", path: "/admin/library" },
+    { icon: Bus, label: "Transport", path: "/admin/transport" },
+    { icon: FileBarChart, label: "Reports", path: "/admin/reports" },
+    { icon: Mail, label: "Communicate", path: "/admin/communicate" },
+    { icon: ClipboardList, label: "Exam", path: "/admin/exam" },
+    { icon: ShoppingBag, label: "Store", path: "/admin/store" },
+    { icon: Image, label: "Gallery", path: "/admin/gallery" },
+    { icon: Wallet, label: "Accounts", path: "/admin/accounts" },
+    { icon: Settings, label: "General Setting", path: "/admin/settings" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col md:flex-row font-sans text-slate-900">
       {/* Sidebar */}
-      <div className="w-full md:w-64 bg-slate-900 text-white flex flex-col shadow-xl z-20">
-        <div className="p-6 text-2xl font-black tracking-tight border-b border-slate-800 flex items-center gap-2 text-indigo-400">
-          <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white text-sm">
-            S
+      <aside className="w-full md:w-72 bg-[#0f172a] text-slate-300 flex flex-col shadow-2xl z-20 h-screen sticky top-0 overflow-y-auto no-scrollbar">
+        <div className="p-6 border-b border-slate-800/50 flex items-center gap-3">
+          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 active:scale-95 transition-transform">
+            <GraduationCap size={22} className="stroke-[2.5]" />
           </div>
-          <span className="text-white">Admin Panel</span>
+          <div className="flex flex-col">
+            <span className="text-white font-bold text-lg tracking-tight">EduSmart</span>
+            <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Admin Portal</span>
+          </div>
         </div>
-        <nav className="flex-1 px-3 py-6 space-y-3">
-          <SidebarItem icon={LayoutDashboard} label="Dashboard" active />
-          <SidebarItem icon={Users} label="Students" />
-          <SidebarItem icon={UserCheck} label="Faculty" />
-          <SidebarItem icon={DollarSign} label="Finances" />
-          <SidebarItem icon={FileText} label="Reports" />
-          <SidebarItem icon={Settings} label="Settings" />
+
+        <nav className="flex-1 px-4 py-6 space-y-1">
+          {navItems.map((item) => (
+            <SidebarItem
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              active={location.pathname === item.path || (item.label === "Dashboard" && location.pathname === "/admin")}
+              onClick={() => navigate(item.path)}
+            />
+          ))}
         </nav>
-        <div className="p-4 border-t border-slate-800">
-          <div className="px-4 py-3 rounded-xl bg-slate-800/50 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold ring-2 ring-indigo-500/30">
+
+        <div className="p-4 mt-auto">
+          <div className="px-4 py-4 rounded-2xl bg-slate-800/40 border border-slate-700/30 flex items-center gap-3 group hover:bg-slate-800/60 transition-colors cursor-pointer">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-slate-700 group-hover:ring-indigo-500/50 transition-all">
               {user.name?.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate">{user.name}</p>
-              <p className="text-[10px] text-slate-400 uppercase tracking-wider">
-                {user.role}
+              <p className="text-sm font-bold text-white truncate group-hover:text-indigo-300 transition-colors uppercase tracking-tight">
+                {user.name}
+              </p>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">
+                System Overlord
               </p>
             </div>
           </div>
         </div>
-      </div>
+      </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col w-full min-w-0">
-        <header className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-100 px-6 py-3 flex justify-between items-center h-16">
-          <div className="flex flex-col">
-            <h1 className="font-bold text-lg text-slate-800 hidden sm:block">
-              School Management System
-            </h1>
+        <header className="bg-white/70 backdrop-blur-xl sticky top-0 z-10 border-b border-slate-200/60 px-8 py-4 flex justify-between items-center h-20">
+          <div className="flex items-center gap-4 flex-1">
+            <div className="hidden lg:flex items-center gap-3 px-4 py-2 bg-slate-100 rounded-2xl w-full max-w-md border border-slate-200/50 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+              <Search size={18} className="text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Search anything..." 
+                className="bg-transparent border-none outline-none text-sm text-slate-600 w-full font-medium"
+              />
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-1.5 text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full w-fit">
-              <Calendar size={12} className="stroke-[2.5]" />
-              <span className="text-[10px] font-bold uppercase tracking-wider">
-                Academic Year: 2024 - 2025
+          <div className="flex items-center gap-6">
+            <div className="hidden xl:flex items-center gap-2 text-indigo-600 bg-indigo-50/50 border border-indigo-100 px-3 py-1.5 rounded-full">
+              <Calendar size={14} className="stroke-[2.5]" />
+              <span className="text-[11px] font-black uppercase tracking-wider">
+                Session: 2024-25
               </span>
             </div>
-            {/* Notifications or other icons could go here */}
+            
+            <button className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors">
+              <Bell size={20} />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
+            </button>
 
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded-xl transition-all duration-200 group ring-1 ring-gray-100"
+                className="flex items-center gap-3 p-1 hover:bg-slate-50 rounded-2xl transition-all duration-200 ring-1 ring-slate-200 group"
               >
-                <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm overflow-hidden border-2 border-white shadow-sm group-hover:ring-2 group-hover:ring-indigo-100 transition-all">
-                  <User size={18} />
-                </div>
-                <div className="hidden md:flex flex-col items-start leading-tight">
-                  <span className="text-sm font-semibold text-gray-800">
-                    {user.name}
-                  </span>
-                  <span className="text-[10px] font-medium text-gray-500 uppercase">
-                    Administrator
-                  </span>
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg border border-indigo-100 shadow-inner group-hover:scale-95 transition-transform">
+                  <User size={20} />
                 </div>
                 <ChevronDown
-                  size={14}
-                  className={`text-gray-400 transition-transform duration-200 ${
-                    isDropdownOpen ? "rotate-180" : ""
+                  size={16}
+                  className={`text-slate-400 mr-2 transition-transform duration-300 ${
+                    isDropdownOpen ? "rotate-180 text-indigo-500" : ""
                   }`}
                 />
               </button>
 
               {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in duration-200 origin-top-right">
-                  <div className="px-4 py-3 border-b border-gray-50 mb-1">
-                    <p className="text-sm font-bold text-gray-900">
+                <div className="absolute right-0 mt-3 w-64 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 z-50 animate-in fade-in slide-in-from-top-4 duration-300 origin-top-right">
+                  <div className="px-4 py-4 border-b border-slate-50 mb-2">
+                    <p className="text-sm font-black text-slate-900 uppercase">
                       {user.name}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">
-                      {user.email || "admin@school.com"}
+                    <p className="text-[11px] text-slate-500 font-medium truncate">
+                      {user.email || "admin@edusmart.com"}
                     </p>
                   </div>
 
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-                    <div className="p-1.5 bg-gray-50 rounded-lg group-hover:bg-indigo-100">
-                      <User size={16} />
-                    </div>
-                    <span className="font-medium">My Profile</span>
-                  </button>
-
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-                    <div className="p-1.5 bg-gray-50 rounded-lg">
-                      <Settings size={16} />
-                    </div>
-                    <span className="font-medium">Settings</span>
-                  </button>
-
-                  <div className="my-1 border-t border-gray-50"></div>
-
+                  <DropdownItem icon={User} label="Profile" />
+                  <DropdownItem icon={Settings} label="Preferences" />
+                  <div className="my-2 border-t border-slate-50"></div>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-rose-600 hover:bg-rose-50 rounded-2xl transition-all font-bold group"
                   >
-                    <div className="p-1.5 bg-red-50 rounded-lg">
-                      <LogOut size={16} />
+                    <div className="p-2 bg-rose-100/50 rounded-xl group-hover:bg-rose-100 transition-colors">
+                      <LogOut size={18} />
                     </div>
                     <span>Sign Out</span>
                   </button>
@@ -161,9 +196,8 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="flex-1 p-8 bg-gray-50 overflow-auto">
-          {/* Page Container */}
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 p-8 overflow-auto">
+          <div className="max-w-[1600px] mx-auto">
             <Outlet />
           </div>
         </main>
@@ -172,19 +206,37 @@ export default function AdminLayout() {
   );
 }
 
-function SidebarItem({ icon, label, active }) {
-  const Icon = icon;
+// eslint-disable-next-line no-unused-vars
+function SidebarItem({ icon: Icon, label, active, onClick }) {
   return (
     <button
-      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all duration-200 group
       ${
         active
-          ? "bg-indigo-600 text-white shadow"
-          : "text-slate-300 hover:bg-slate-800 hover:text-white"
+          ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20"
+          : "text-slate-400 hover:bg-slate-800/50 hover:text-white"
       }`}
     >
-      <Icon size={18} />
+      <Icon 
+        size={20} 
+        className={`${active ? "text-white" : "text-slate-500 group-hover:text-indigo-400"} transition-colors`} 
+      />
+      <span className="tracking-tight">{label}</span>
+      {active && <div className="ml-auto w-1.5 h-1.5 bg-white rounded-full"></div>}
+    </button>
+  );
+}
+
+// eslint-disable-next-line no-unused-vars
+function DropdownItem({ icon: Icon, label }) {
+  return (
+    <button className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-2xl transition-all font-bold group">
+      <div className="p-2 bg-slate-50 rounded-xl group-hover:bg-indigo-50 transition-colors">
+        <Icon size={18} />
+      </div>
       <span>{label}</span>
     </button>
+
   );
 }

@@ -9,13 +9,39 @@ import {
 import {
   Users,
   GraduationCap,
-  School,
+  TrendingUp,
+  TrendingDown,
   Plus,
+  ArrowUpRight,
+  ArrowDownRight,
+  School,
+  Calendar,
 } from "lucide-react";
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
+
+import {
+  monthlyFinanceData,
+  paymentMethodsData,
+  dashboardStats,
+} from "../../mock/dashboardData";
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
-  const { students, teachers, classes, status } = useSelector(
+  const { user } = useSelector((state) => state.auth);
+  const { students, teachers, status } = useSelector(
     (state) => state.admin
   );
 
@@ -29,193 +55,278 @@ export default function AdminDashboard() {
 
   if (status === "loading") {
     return (
-      <div className="p-10 text-center text-gray-500">
-        Loading dashboard...
+      <div className="flex items-center justify-center p-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Admin Dashboard
+    <div className="space-y-10 pb-10">
+      {/* Header & Greeting */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            Welcome back, <span className="text-indigo-600">{user?.name || "Admin"}</span>! 👋
           </h1>
-          <p className="text-gray-500">
-            Overview of your school management system
+          <p className="text-slate-500 font-medium flex items-center gap-2">
+            <Calendar size={16} />
+            Here's what's happening in your school today.
           </p>
         </div>
 
-        <button className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition">
-          <Plus size={18} />
-          Add Student
-        </button>
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95">
+            <Plus size={18} className="stroke-[3]" />
+            New Admission
+          </button>
+        </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard
+      {/* Summary Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <DashboardStatCard
+          title="Today's Income"
+          value={dashboardStats.todayIncome}
+          subValue={dashboardStats.monthIncome}
+          subLabel="This Month"
+          icon={<TrendingUp size={20} />}
+          trend="+12.5%"
+          isPositive={true}
+          color="emerald"
+        />
+
+        <DashboardStatCard
+          title="Today's Expense"
+          value={dashboardStats.todayExpense}
+          subValue={dashboardStats.monthExpense}
+          subLabel="This Month"
+          icon={<TrendingDown size={20} />}
+          trend="-2.4%"
+          isPositive={false}
+          color="rose"
+        />
+
+        <DashboardStatCard
           title="Total Students"
-          value={students.length}
-          icon={<GraduationCap />}
-          color="blue"
+          value={students.length || dashboardStats.totalStudents}
+          subValue={dashboardStats.presentStudents}
+          subLabel="Present Today"
+          icon={<GraduationCap size={20} />}
+          trend={`${((dashboardStats.presentStudents / dashboardStats.totalStudents) * 100).toFixed(1)}%`}
+          isPositive={true}
+          color="indigo"
         />
 
-        <StatCard
-          title="Total Teachers"
-          value={teachers.length}
-          icon={<Users />}
-          color="green"
-        />
-
-        <StatCard
-          title="Total Classes"
-          value={classes.length}
-          icon={<School />}
-          color="purple"
+        <DashboardStatCard
+          title="Total Staff"
+          value={teachers.length || dashboardStats.totalStaff}
+          subValue={dashboardStats.presentStaff}
+          subLabel="Present Today"
+          icon={<Users size={20} />}
+          trend="96.4%"
+          isPositive={true}
+          color="amber"
         />
       </div>
 
-      {/* Main Grid */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        
-        {/* Left */}
-        <div className="lg:col-span-2 space-y-6">
-          
-          {/* Quick Actions */}
-          <div className="bg-white rounded-2xl shadow-sm border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">
-              Quick Actions
-            </h3>
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Income vs Expense Bar Chart */}
+        <div className="xl:col-span-2 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-black text-slate-800 tracking-tight">Financial Overview</h3>
+            <select className="bg-slate-50 border border-slate-200 text-sm font-bold p-2 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/20">
+              <option>Last 7 Months</option>
+              <option>Year 2024</option>
+            </select>
+          </div>
+          <div className="h-[350px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={monthlyFinanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }}
+                  dy={10}
+                />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
+                <Tooltip 
+                  cursor={{ fill: '#f8fafc' }}
+                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                />
+                <Bar dataKey="income" fill="#6366f1" radius={[6, 6, 0, 0]} barSize={24} />
+                <Bar dataKey="expense" fill="#f43f5e" radius={[6, 6, 0, 0]} barSize={24} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <QuickAction label="Add Student" />
-              <QuickAction label="Add Teacher" />
-              <QuickAction label="Create Class" />
-              <QuickAction label="Send Notice" />
+        {/* Payment Methods Pie Chart */}
+        <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+          <h3 className="text-xl font-black text-slate-800 tracking-tight mb-8">Payment Methods</h3>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={paymentMethodsData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={100}
+                  paddingAngle={8}
+                  dataKey="value"
+                >
+                  {paymentMethodsData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', fontWeight: 600, fontSize: '12px' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-bold text-slate-500">Total Collected</span>
+              <span className="text-lg font-black text-slate-900">{dashboardStats.monthIncome}</span>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Students Table */}
-          <div className="bg-white rounded-2xl shadow-sm border">
-            <div className="p-6 border-b">
-              <h3 className="font-semibold text-gray-900">
-                Recent Students
-              </h3>
-            </div>
+      {/* Tables Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Recent Students */}
+        <div className="lg:col-span-2 bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+          <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+            <h3 className="text-xl font-black text-slate-800 tracking-tight">Recent Enrolled Students</h3>
+            <button className="text-indigo-600 text-sm font-bold hover:underline">View All</button>
+          </div>
 
+          <div className="overflow-x-auto px-4 pb-4">
             <table className="w-full">
-              <thead className="bg-gray-50 text-sm text-gray-600">
-                <tr>
-                  <th className="px-6 py-3 text-left">Name</th>
-                  <th className="px-6 py-3 text-left">Class</th>
-                  <th className="px-6 py-3 text-left">Attendance</th>
+              <thead>
+                <tr className="text-slate-400 text-[11px] font-black uppercase tracking-widest">
+                  <th className="px-6 py-4 text-left">Student Name</th>
+                  <th className="px-6 py-4 text-left">Class</th>
+                  <th className="px-6 py-4 text-left">Attendance</th>
+                  <th className="px-6 py-4 text-right">Action</th>
                 </tr>
               </thead>
-
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-slate-50">
                 {students.slice(0, 5).map((student) => (
-                  <tr key={student.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 font-medium">
-                      {student.name}
+                  <tr key={student.id} className="group hover:bg-slate-50/80 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-slate-600 text-sm border border-slate-200 group-hover:bg-white group-hover:scale-110 transition-all">
+                          {student.name.charAt(0)}
+                        </div>
+                        <span className="font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">{student.name}</span>
+                      </div>
                     </td>
-
-                    <td className="px-6 py-4 text-gray-600">
+                    <td className="px-6 py-4 text-sm font-bold text-slate-500">
                       {student.classId}
                     </td>
-
                     <td className="px-6 py-4">
-                      <span className="px-2 py-1 text-xs rounded-full bg-green-50 text-green-600">
-                        {student.attendance}%
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-full bg-slate-100 rounded-full h-1.5 max-w-[80px]">
+                          <div 
+                            className="bg-emerald-500 h-1.5 rounded-full" 
+                            style={{ width: `${student.attendance || 85}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-black text-slate-600">{student.attendance || 85}%</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="p-2 hover:bg-white border border-transparent hover:border-slate-200 rounded-xl transition-all">
+                        <ArrowUpRight size={16} className="text-slate-400 group-hover:text-indigo-600" />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
         </div>
 
-        {/* Right Sidebar */}
+        {/* Quick Actions */}
         <div className="space-y-6">
-          
-          <div className="bg-white rounded-2xl shadow-sm border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">
-              Recent Activity
-            </h3>
-
-            <div className="space-y-4 text-sm">
-              <Activity text="New student added" />
-              <Activity text="Teacher updated profile" />
-              <Activity text="Class schedule updated" />
-              <Activity text="Attendance marked today" />
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
+            <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+            <h3 className="text-xl font-black mb-4 relative z-10">Quick Launch 🚀</h3>
+            <div className="grid grid-cols-2 gap-3 relative z-10">
+              <QuickActionItem label="Mark Attendance" icon={<ClipboardCheck size={18} />} />
+              <QuickActionItem label="Collect Fees" icon={<CreditCard size={18} />} />
+              <QuickActionItem label="Create Exam" icon={<ClipboardList size={18} />} />
+              <QuickActionItem label="Send SMS" icon={<Mail size={18} />} />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl p-6">
-            <h3 className="font-semibold mb-2">
-              School Announcement
-            </h3>
-
-            <p className="text-sm text-blue-100">
-              Mid-term exams start next week. Please update records.
+          <div className="bg-indigo-50 p-6 rounded-[2.5rem] border border-indigo-100">
+            <h4 className="font-black text-indigo-900 mb-3 flex items-center gap-2">
+              <School size={18} />
+              Academy Tip
+            </h4>
+            <p className="text-indigo-700 text-sm font-medium leading-relaxed">
+              Did you know? Students with &gt;90% attendance show 40% better academic results.
             </p>
-
-            <button className="mt-4 bg-white text-blue-600 px-4 py-2 rounded-lg text-sm font-medium">
-              View Details
+            <button className="mt-4 text-[11px] font-black uppercase text-indigo-600 hover:tracking-widest transition-all">
+              Read More Analysis →
             </button>
           </div>
-
         </div>
       </div>
     </div>
   );
 }
 
-/* Stat Card */
-function StatCard({ title, value, icon, color }) {
-  const colors = {
-    blue: "bg-blue-50 text-blue-600",
-    green: "bg-green-50 text-green-600",
-    purple: "bg-purple-50 text-purple-600",
+function DashboardStatCard({ title, value, subValue, subLabel, icon, trend, isPositive, color }) {
+  const colorStyles = {
+    emerald: "bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100",
+    rose: "bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100",
+    indigo: "bg-indigo-50 text-indigo-600 border-indigo-100 shadow-indigo-100",
+    amber: "bg-amber-50 text-amber-600 border-amber-100 shadow-amber-100",
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border hover:shadow-md transition">
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-sm text-gray-500">{title}</p>
-          <h3 className="text-3xl font-semibold mt-1">
-            {value}
-          </h3>
-        </div>
-
-        <div className={`p-3 rounded-xl ${colors[color]}`}>
+    <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+      <div className="flex justify-between items-start mb-4">
+        <div className={`p-3 rounded-2xl ${colorStyles[color]} border shadow-inner group-hover:scale-110 transition-transform`}>
           {icon}
+        </div>
+        <div className={`flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full ${isPositive ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+          {isPositive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+          {trend}
+        </div>
+      </div>
+      <div>
+        <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-1">{title}</p>
+        <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">
+          {value}
+        </h3>
+        <div className="flex items-center justify-between pt-3 border-t border-slate-50">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{subLabel}</span>
+          <span className="text-sm font-black text-slate-700">{subValue}</span>
         </div>
       </div>
     </div>
   );
 }
 
-/* Quick Action */
-function QuickAction({ label }) {
+function QuickActionItem({ label, icon }) {
   return (
-    <button className="p-4 rounded-xl border hover:bg-gray-50 transition text-sm font-medium">
-      {label}
+    <button className="flex flex-col items-center gap-2 p-3 bg-white/10 hover:bg-white/20 rounded-2xl transition-all border border-white/5 active:scale-95 group/btn">
+      <div className="p-2 bg-white/10 rounded-xl group-hover/btn:scale-110 transition-transform">
+        {icon}
+      </div>
+      <span className="text-[10px] font-bold text-center leading-tight">{label}</span>
     </button>
   );
 }
 
-/* Activity */
-function Activity({ text }) {
-  return (
-    <div className="flex gap-3">
-      <div className="w-2 h-2 mt-2 bg-blue-500 rounded-full" />
-      <p className="text-gray-600">{text}</p>
-    </div>
-  );
-}
+// Dummy icons for quick action items that weren't imported
+import { ClipboardCheck, CreditCard, ClipboardList, Mail } from "lucide-react";

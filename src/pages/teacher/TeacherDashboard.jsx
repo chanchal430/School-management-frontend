@@ -1,6 +1,34 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTeacherClasses } from '../../redux/slices/teacherSlice';
+import {
+  Users,
+  BookOpen,
+  ClipboardCheck,
+  PencilLine,
+  ArrowUpRight,
+  ArrowDownRight,
+  Calendar,
+  Clock,
+  MapPin,
+  GraduationCap,
+} from "lucide-react";
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+
+import {
+  teacherClassPerformance,
+  teacherWeeklySchedule,
+} from "../../mock/dashboardData";
 
 export default function TeacherDashboard() {
   const dispatch = useDispatch();
@@ -14,50 +42,229 @@ export default function TeacherDashboard() {
   }, [status, dispatch, user]);
 
   if (status === 'loading') {
-    return <div className="p-8 text-center text-gray-500">Loading data...</div>;
+    return (
+      <div className="flex items-center justify-center p-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600"></div>
+      </div>
+    );
   }
 
+  const stats = [
+    { 
+      title: "My Classes", 
+      value: classes.length || "4", 
+      subValue: "2 Classes Today", 
+      icon: <BookOpen size={20} />, 
+      trend: "+1", 
+      isPositive: true, 
+      color: "violet" 
+    },
+    { 
+      title: "Total Students", 
+      value: "124", 
+      subValue: "92% Attendance", 
+      icon: <Users size={20} />, 
+      trend: "avg", 
+      isPositive: true, 
+      color: "indigo" 
+    },
+    { 
+      title: "Pending Assignments", 
+      value: "12", 
+      subValue: "5 Due Tomorrow", 
+      icon: <PencilLine size={20} />, 
+      trend: "active", 
+      isPositive: false, 
+      color: "rose" 
+    },
+    { 
+      title: "Attendance Recorded", 
+      value: "3/4", 
+      subValue: "75% Done", 
+      icon: <ClipboardCheck size={20} />, 
+      trend: "8:00 AM", 
+      isPositive: true, 
+      color: "teal" 
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-gray-900">Welcome, {user?.name}</h1>
-      
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="bg-white overflow-hidden shadow rounded-lg px-4 py-5 sm:p-6 border-l-4 border-indigo-500">
-          <dt className="text-sm font-medium text-gray-500 truncate">My Classes</dt>
-          <dd className="mt-1 text-3xl font-semibold text-gray-900">{classes.length}</dd>
+    <div className="space-y-10 pb-10">
+      {/* Header & Greeting */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            Greetings, <span className="text-violet-600">Prof. {user?.name || "Teacher"}</span> 🎓
+          </h1>
+          <p className="text-slate-500 font-medium flex items-center gap-2">
+            <Calendar size={16} />
+            Today is Tuesday, 24th March. You have 4 sessions scheduled.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 bg-violet-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-violet-700 transition-all shadow-lg shadow-violet-200 active:scale-95">
+            <ClipboardCheck size={18} className="stroke-[3]" />
+            Mark Attendance
+          </button>
         </div>
       </div>
 
-      {/* Tables Placeholder */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Assigned Classes</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Count</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat) => (
+          <TeacherStatCard key={stat.title} {...stat} />
+        ))}
+      </div>
+
+      {/* Charts & Schedule */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Class Performance Chart */}
+        <div className="xl:col-span-2 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-black text-slate-800 tracking-tight">Class Performance Index</h3>
+            <div className="px-4 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 uppercase tracking-widest leading-none">
+              Avg Marks %
+            </div>
+          </div>
+          <div className="h-[350px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={teacherClassPerformance} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }}
+                  dy={10}
+                />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
+                <Tooltip 
+                  cursor={{ fill: '#f8fafc' }}
+                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                />
+                <Bar dataKey="avgMarks" fill="#8b5cf6" radius={[6, 6, 0, 0]} barSize={40}>
+                  {teacherClassPerformance.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.avgMarks > 80 ? '#8b5cf6' : '#a78bfa'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Today's Schedule */}
+        <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+          <h3 className="text-xl font-black text-slate-800 tracking-tight mb-8">Next Sessions</h3>
+          <div className="space-y-6">
+            {teacherWeeklySchedule.map((session, idx) => (
+              <div key={idx} className="group flex items-start gap-4 p-4 rounded-3xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
+                <div className="flex flex-col items-center justify-center text-[10px] font-black uppercase text-slate-400 min-w-[60px]">
+                  <Clock size={16} className="mb-1 text-slate-300 group-hover:text-violet-500 transition-colors" />
+                  {session.time.split(' ')[0]}
+                  <span className="text-[8px]">{session.time.split(' ')[1]}</span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-black text-slate-800 group-hover:text-violet-600 transition-colors leading-tight">
+                    {session.subject}
+                  </h4>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                    <span className="flex items-center gap-1 text-[11px] font-bold text-slate-500 uppercase">
+                      <GraduationCap size={12} /> {session.class}
+                    </span>
+                    <span className="flex items-center gap-1 text-[11px] font-bold text-slate-500 uppercase">
+                      <MapPin size={12} /> {session.room}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <button className="w-full mt-8 py-4 bg-slate-50 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-400 hover:bg-violet-50 hover:text-violet-600 transition-all">
+            View Full Timetable →
+          </button>
+        </div>
+      </div>
+
+      {/* Classes Table */}
+      <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+        <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+          <h3 className="text-xl font-black text-slate-800 tracking-tight">Assigned Classes Overview</h3>
+          <button className="text-violet-600 text-sm font-bold hover:underline">Manage All</button>
+        </div>
+
+        <div className="overflow-x-auto px-4 pb-4">
+          <table className="w-full">
+            <thead>
+              <tr className="text-slate-400 text-[11px] font-black uppercase tracking-widest">
+                <th className="px-6 py-4 text-left">Class Name</th>
+                <th className="px-6 py-4 text-left">Subject ID</th>
+                <th className="px-6 py-4 text-left">Students</th>
+                <th className="px-6 py-4 text-right">Performance</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-slate-50">
               {classes.map((cls) => (
-                <tr key={cls.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{cls.id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cls.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cls.studentCount}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 hover:text-indigo-900 cursor-pointer">View Details</td>
+                <tr key={cls.id} className="group hover:bg-slate-50/80 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap font-bold text-slate-700 group-hover:text-violet-600 transition-colors">
+                    {cls.name}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-bold text-slate-500">
+                    {cls.id}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                       <span className="text-xs font-black text-slate-600">{cls.studentCount} Students</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <button className="bg-violet-50 text-violet-600 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-violet-600 hover:text-white transition-all">
+                      Details
+                    </button>
+                  </td>
                 </tr>
               ))}
               {classes.length === 0 && (
-                <tr>
-                  <td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500">No classes assigned.</td>
-                </tr>
+                 <tr>
+                    <td colSpan="4" className="px-6 py-10 text-center text-sm font-bold text-slate-400 italic">No active classes assigned for current session.</td>
+                 </tr>
               )}
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TeacherStatCard({ title, value, subValue, subLabel, icon, trend, isPositive, color }) {
+  const colorStyles = {
+    violet: "bg-violet-50 text-violet-600 border-violet-100 shadow-violet-100",
+    indigo: "bg-indigo-50 text-indigo-600 border-indigo-100 shadow-indigo-100",
+    rose: "bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100",
+    teal: "bg-teal-50 text-teal-600 border-teal-100 shadow-teal-100",
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+      <div className="flex justify-between items-start mb-4">
+        <div className={`p-3 rounded-2xl ${colorStyles[color]} border shadow-inner group-hover:scale-110 transition-transform`}>
+          {icon}
+        </div>
+        <div className={`flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full ${isPositive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
+          {trend === "avg" || trend === "active" ? trend : (isPositive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />)}
+          {trend !== "avg" && trend !== "active" && trend}
+        </div>
+      </div>
+      <div>
+        <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-1">{title}</p>
+        <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">
+          {value}
+        </h3>
+        <div className="flex items-center justify-between pt-3 border-t border-slate-50">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Status</span>
+          <span className="text-sm font-black text-slate-700">{subValue}</span>
         </div>
       </div>
     </div>
