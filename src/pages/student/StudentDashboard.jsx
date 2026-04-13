@@ -12,6 +12,9 @@ import {
   ArrowUpRight,
   Target,
   AlertCircle,
+  Wallet,
+  CreditCard,
+  Receipt,
 } from "lucide-react";
 
 import {
@@ -29,6 +32,7 @@ import {
   studentMarksProgression,
   studentHomework,
   upcomingExams,
+  studentFinance,
 } from "../../mock/dashboardData";
 
 export default function StudentDashboard() {
@@ -51,41 +55,41 @@ export default function StudentDashboard() {
   }
 
   const stats = [
-    { 
-      title: "Attendance", 
-      value: profile?.attendance ? `${profile.attendance}%` : "94%", 
-      subValue: "Good Standing", 
-      icon: <CheckCircle2 size={20} />, 
-      trend: "stable", 
-      isPositive: true, 
-      color: "emerald" 
+    {
+      title: "Attendance",
+      value: profile?.attendance ? `${profile.attendance}%` : "94%",
+      subValue: "Good Standing",
+      icon: <CheckCircle2 size={20} />,
+      trend: "stable",
+      isPositive: true,
+      color: "emerald"
     },
-    { 
-      title: "Current Grade", 
-      value: "A (3.8)", 
-      subValue: "Keep it up!", 
-      icon: <Trophy size={20} />, 
-      trend: "top 5%", 
-      isPositive: true, 
-      color: "indigo" 
+    {
+      title: "Current Grade",
+      value: "A (3.8)",
+      subValue: "Keep it up!",
+      icon: <Trophy size={20} />,
+      trend: "top 5%",
+      isPositive: true,
+      color: "indigo"
     },
-    { 
-      title: "Upcoming Exams", 
-      value: upcomingExams.length.toString(), 
-      subValue: "Next in 15 days", 
-      icon: <Calendar size={20} />, 
-      trend: "exam mode", 
-      isPositive: false, 
-      color: "amber" 
+    {
+      title: "Upcoming Exams",
+      value: upcomingExams.length.toString(),
+      subValue: "Next in 15 days",
+      icon: <Calendar size={20} />,
+      trend: "exam mode",
+      isPositive: false,
+      color: "amber"
     },
-    { 
-      title: "Pending Tasks", 
-      value: studentHomework.filter(h => h.status !== 'Done').length.toString(), 
-      subValue: "2 due today", 
-      icon: <PencilLine size={20} />, 
-      trend: "priority", 
-      isPositive: false, 
-      color: "rose" 
+    {
+      title: "Pending Tasks",
+      value: studentHomework.filter(h => h.status !== 'Done').length.toString(),
+      subValue: "2 due today",
+      icon: <PencilLine size={20} />,
+      trend: "priority",
+      isPositive: false,
+      color: "rose"
     },
   ];
 
@@ -123,7 +127,7 @@ export default function StudentDashboard() {
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        
+
         {/* Performance Chart */}
         <div className="xl:col-span-2 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-8">
@@ -133,19 +137,19 @@ export default function StudentDashboard() {
               <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-lg bg-indigo-100 text-indigo-700">English</span>
             </div>
           </div>
-          <div className="h-[350px] w-full">
+          <div className="h-[22rem] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={studentMarksProgression} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis 
-                  dataKey="exam" 
-                  axisLine={false} 
-                  tickLine={false} 
+                <XAxis
+                  dataKey="exam"
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }}
                   dy={10}
                 />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} domain={[60, 100]} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', fontWeight: 600, fontSize: '12px' }} />
@@ -196,6 +200,115 @@ export default function StudentDashboard() {
               </div>
               <span className="text-[10px] font-black uppercase tracking-widest text-indigo-200">65% Progress</span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Financial sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Financial Overview */}
+        <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col group">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl group-hover:rotate-12 transition-transform">
+                <Wallet size={24} />
+              </div>
+              <h3 className="text-xl font-black text-slate-800 tracking-tight">Financial Overview</h3>
+            </div>
+            <span className="text-[10px] font-black uppercase px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full tracking-widest">
+              Live Balance
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="p-4 rounded-3xl bg-slate-50 border border-slate-50">
+              <p className="text-[10px] font-black uppercase text-slate-400 mb-1 tracking-widest">Total Fees</p>
+              <h4 className="text-lg font-black text-slate-800">{studentFinance.totalFees}</h4>
+            </div>
+            <div className="p-4 rounded-3xl bg-emerald-50/50 border border-emerald-100/50">
+              <p className="text-[10px] font-black uppercase text-emerald-600 mb-1 tracking-widest">Paid</p>
+              <h4 className="text-lg font-black text-emerald-700">{studentFinance.paidAmount}</h4>
+            </div>
+            <div className="p-4 rounded-3xl bg-rose-50/50 border border-rose-100/50">
+              <p className="text-[10px] font-black uppercase text-rose-600 mb-1 tracking-widest">Balance</p>
+              <h4 className="text-lg font-black text-rose-700">{studentFinance.balanceAmount}</h4>
+            </div>
+          </div>
+
+          <div className="space-y-4 flex-1">
+            <h4 className="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center gap-2">
+              <Receipt size={16} className="text-emerald-500" />
+              Recent Activities
+            </h4>
+            <div className="space-y-3">
+              {studentFinance.transactions.map((tx) => (
+                <div key={tx.id} className="flex items-center justify-between p-3 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 transition-colors">
+                      <ArrowUpRight size={14} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black text-slate-700 leading-none">{tx.title}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">{tx.date}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-black text-slate-800">{tx.amount}</p>
+                    <p className="text-[9px] font-black text-emerald-600 uppercase">Successful</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Method */}
+        <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col group">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:rotate-12 transition-transform">
+                <CreditCard size={24} />
+              </div>
+              <h3 className="text-xl font-black text-slate-800 tracking-tight">Payment Method</h3>
+            </div>
+            <button className="text-[10px] font-black text-indigo-600 uppercase hover:underline">Manage Methods</button>
+          </div>
+
+          <div className="space-y-6 mb-8">
+            {studentFinance.savedCards.map((card) => (
+              <div key={card.id} className={`relative p-6 h-40 rounded-[2rem] text-white shadow-lg overflow-hidden transition-transform hover:-translate-y-1 ${
+                card.color === 'indigo' ? 'bg-gradient-to-br from-indigo-600 to-indigo-800' : 'bg-gradient-to-br from-slate-700 to-slate-900'
+              }`}>
+                <div className="absolute top-0 right-0 p-6 opacity-20">
+                  <CreditCard size={80} strokeWidth={1} />
+                </div>
+                <div className="relative z-10 flex flex-col h-full justify-between">
+                  <div className="flex justify-between items-start">
+                    <div className="w-10 h-7 bg-white/20 rounded-md backdrop-blur-sm border border-white/10" />
+                    <span className="text-xs font-black italic tracking-widest">{card.type}</span>
+                  </div>
+                  <div>
+                    <p className="text-lg font-black tracking-[0.2em] mb-1">•••• •••• •••• {card.last4}</p>
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <p className="text-[8px] font-black uppercase tracking-widest opacity-60">Expiry</p>
+                        <p className="text-xs font-bold leading-none">{card.expiry}</p>
+                      </div>
+                      <div className="px-2 py-1 rounded-lg bg-white text-indigo-900 text-[10px] font-black uppercase">
+                        Active
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-auto">
+            <button className="w-full py-4 bg-slate-900 text-white rounded-[1.5rem] font-black flex items-center justify-center gap-2 hover:bg-emerald-600 transition-all shadow-lg hover:shadow-emerald-200">
+              Proceed to Pay Fees
+              <ArrowUpRight size={18} />
+            </button>
           </div>
         </div>
       </div>

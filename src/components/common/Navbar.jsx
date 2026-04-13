@@ -132,7 +132,7 @@ function Navbar() {
                       type: "spring",
                       stiffness: 200,
                     }}
-                    className="absolute top-10 left-0 w-[420px] bg-white shadow-xl rounded-2xl p-4 grid grid-cols-2 gap-4 border"
+                    className="absolute top-10 left-0 w-[26rem] max-w-[90vw] bg-white shadow-xl rounded-2xl p-4 grid grid-cols-2 gap-4 border"
                   >
                     {features.map((item, index) => (
                       <Motion.div

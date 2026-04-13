@@ -50,41 +50,41 @@ export default function TeacherDashboard() {
   }
 
   const stats = [
-    { 
-      title: "My Classes", 
-      value: classes.length || "4", 
-      subValue: "2 Classes Today", 
-      icon: <BookOpen size={20} />, 
-      trend: "+1", 
-      isPositive: true, 
-      color: "violet" 
+    {
+      title: "My Classes",
+      value: classes.length || "4",
+      subValue: "2 Classes Today",
+      icon: <BookOpen size={20} />,
+      trend: "+1",
+      isPositive: true,
+      color: "violet"
     },
-    { 
-      title: "Total Students", 
-      value: "124", 
-      subValue: "92% Attendance", 
-      icon: <Users size={20} />, 
-      trend: "avg", 
-      isPositive: true, 
-      color: "indigo" 
+    {
+      title: "Total Students",
+      value: "124",
+      subValue: "92% Attendance",
+      icon: <Users size={20} />,
+      trend: "avg",
+      isPositive: true,
+      color: "indigo"
     },
-    { 
-      title: "Pending Assignments", 
-      value: "12", 
-      subValue: "5 Due Tomorrow", 
-      icon: <PencilLine size={20} />, 
-      trend: "active", 
-      isPositive: false, 
-      color: "rose" 
+    {
+      title: "Pending Assignments",
+      value: "12",
+      subValue: "5 Due Tomorrow",
+      icon: <PencilLine size={20} />,
+      trend: "active",
+      isPositive: false,
+      color: "rose"
     },
-    { 
-      title: "Attendance Recorded", 
-      value: "3/4", 
-      subValue: "75% Done", 
-      icon: <ClipboardCheck size={20} />, 
-      trend: "8:00 AM", 
-      isPositive: true, 
-      color: "teal" 
+    {
+      title: "Attendance Recorded",
+      value: "3/4",
+      subValue: "75% Done",
+      icon: <ClipboardCheck size={20} />,
+      trend: "8:00 AM",
+      isPositive: true,
+      color: "teal"
     },
   ];
 
@@ -127,19 +127,19 @@ export default function TeacherDashboard() {
               Avg Marks %
             </div>
           </div>
-          <div className="h-[350px] w-full">
+          <div className="h-[22rem] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={teacherClassPerformance} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }}
                   dy={10}
                 />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
-                <Tooltip 
+                <Tooltip
                   cursor={{ fill: '#f8fafc' }}
                   contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                 />
@@ -180,7 +180,7 @@ export default function TeacherDashboard() {
               </div>
             ))}
           </div>
-          
+
           <button className="w-full mt-8 py-4 bg-slate-50 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-400 hover:bg-violet-50 hover:text-violet-600 transition-all">
             View Full Timetable →
           </button>
@@ -215,7 +215,7 @@ export default function TeacherDashboard() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                       <span className="text-xs font-black text-slate-600">{cls.studentCount} Students</span>
+                      <span className="text-xs font-black text-slate-600">{cls.studentCount} Students</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -226,9 +226,9 @@ export default function TeacherDashboard() {
                 </tr>
               ))}
               {classes.length === 0 && (
-                 <tr>
-                    <td colSpan="4" className="px-6 py-10 text-center text-sm font-bold text-slate-400 italic">No active classes assigned for current session.</td>
-                 </tr>
+                <tr>
+                  <td colSpan="4" className="px-6 py-10 text-center text-sm font-bold text-slate-400 italic">No active classes assigned for current session.</td>
+                </tr>
               )}
             </tbody>
           </table>
