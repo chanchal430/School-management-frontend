@@ -103,7 +103,7 @@ function Navbar() {
             >
               <GraduationCap className="text-white" size={20} />
             </Motion.div>
-            <span className="font-bold text-lg">SchoolMS</span>
+            <span className="font-bold text-lg">EduSmart</span>
           </Link>
 
           {/* Desktop Nav */}

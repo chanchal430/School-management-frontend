@@ -54,7 +54,7 @@ function CTA() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-900">Email us</p>
-                  <p className="text-slate-500">support@schoolms.com</p>
+                  <p className="text-slate-500">support@EduSmart.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 group">

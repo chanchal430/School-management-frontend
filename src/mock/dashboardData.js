@@ -100,6 +100,19 @@ export const studentFinance = {
   ],
   savedCards: [
     { id: 1, type: "Visa", last4: "4242", expiry: "12/26", color: "indigo" },
-    { id: 2, type: "Mastercard", last4: "8821", expiry: "08/25", color: "slate" },
   ]
 };
+
+export const adminUpcomingEvents = [
+  { id: 1, title: "Summer Vacation Begins", type: "Holiday", date: "15 May 2024", time: "All Day", color: "emerald", icon: "Sun" },
+  { id: 2, title: "Mid-Term Examination", type: "Exam", date: "20 May 2024", time: "09:00 AM", color: "indigo", icon: "BookOpen" },
+  { id: 3, title: "Annual Sports Day", type: "Event", date: "10 Jun 2024", time: "08:30 AM", color: "amber", icon: "Trophy" },
+  { id: 4, title: "Staff Meeting", type: "Meeting", date: "12 Jun 2024", time: "03:00 PM", color: "rose", icon: "Users" },
+];
+
+export const adminRecentActivity = [
+  { id: 1, title: "Fees Collected", desc: "Received ₹15,000 from Rahul Sharma", time: "10 mins ago", type: "finance", color: "emerald" },
+  { id: 2, title: "New Admission", desc: "Priya Das enrolled in Class 11-A", time: "2 hours ago", type: "admission", color: "indigo" },
+  { id: 3, title: "Staff Leave", desc: "Amit Verma applied for sick leave", time: "5 hours ago", type: "hr", color: "amber" },
+  { id: 4, title: "Library Book Added", desc: "Added 50 new copies of 'Physics Vol II'", time: "1 day ago", type: "library", color: "slate" },
+];

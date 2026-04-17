@@ -11,6 +11,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import ComingSoon from "./pages/ComingSoon";
+import FrontOffice from "./pages/admin/front-office/FrontOffice";
+import FeesCollection from "./pages/admin/fees/FeesCollection";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
@@ -65,8 +67,8 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           
           {/* New Admin Modules */}
-          <Route path="front-office" element={<ComingSoon title="Front Office" />} />
-          <Route path="fees" element={<ComingSoon title="Fees Collection" />} />
+          <Route path="front-office/*" element={<FrontOffice />} />
+          <Route path="fees/*" element={<FeesCollection />} />
           <Route path="students" element={<ComingSoon title="Student Information" />} />
           <Route path="income" element={<ComingSoon title="Income Management" />} />
           <Route path="expense" element={<ComingSoon title="Expense Management" />} />

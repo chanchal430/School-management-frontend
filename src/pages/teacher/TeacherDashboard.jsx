@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchTeacherClasses } from '../../redux/slices/teacherSlice';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTeacherClasses } from "../../redux/slices/teacherSlice";
 import {
   Users,
   BookOpen,
@@ -24,6 +24,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import DataTable from "../../components/ui/DataTable";
 
 import {
   teacherClassPerformance,
@@ -32,22 +33,47 @@ import {
 
 export default function TeacherDashboard() {
   const dispatch = useDispatch();
-  const { user } = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { classes, status } = useSelector((state) => state.teacher);
 
   useEffect(() => {
-    if (user && user.id && status === 'idle') {
+    if (user && user.id && status === "idle") {
       dispatch(fetchTeacherClasses(user.id));
     }
   }, [status, dispatch, user]);
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <div className="flex items-center justify-center p-20">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600"></div>
       </div>
     );
   }
+
+  const classTableColumns = [
+    { header: "Class Name", accessor: "name", width: 220 },
+    { header: "Subject ID", accessor: "id", width: 120 },
+    {
+      header: "Students",
+      accessor: "studentCount",
+      width: 160,
+      render: (row) => (
+        <span className="text-xs font-black text-slate-600">
+          {row.studentCount} Students
+        </span>
+      ),
+    },
+    {
+      header: "Performance",
+      accessor: "id",
+      width: 140,
+      render: () => (
+        <button className="bg-violet-50 text-violet-600 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-violet-600 hover:text-white transition-all">
+          Details
+        </button>
+      ),
+    },
+  ];
 
   const stats = [
     {
@@ -57,7 +83,7 @@ export default function TeacherDashboard() {
       icon: <BookOpen size={20} />,
       trend: "+1",
       isPositive: true,
-      color: "violet"
+      color: "violet",
     },
     {
       title: "Total Students",
@@ -66,7 +92,7 @@ export default function TeacherDashboard() {
       icon: <Users size={20} />,
       trend: "avg",
       isPositive: true,
-      color: "indigo"
+      color: "indigo",
     },
     {
       title: "Pending Assignments",
@@ -75,7 +101,7 @@ export default function TeacherDashboard() {
       icon: <PencilLine size={20} />,
       trend: "active",
       isPositive: false,
-      color: "rose"
+      color: "rose",
     },
     {
       title: "Attendance Recorded",
@@ -84,7 +110,7 @@ export default function TeacherDashboard() {
       icon: <ClipboardCheck size={20} />,
       trend: "8:00 AM",
       isPositive: true,
-      color: "teal"
+      color: "teal",
     },
   ];
 
@@ -94,7 +120,11 @@ export default function TeacherDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
         <div className="space-y-1">
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-            Greetings, <span className="text-violet-600">Prof. {user?.name || "Teacher"}</span> 🎓
+            Greetings,{" "}
+            <span className="text-violet-600">
+              Prof. {user?.name || "Teacher"}
+            </span>{" "}
+            🎓
           </h1>
           <p className="text-slate-500 font-medium flex items-center gap-2">
             <Calendar size={16} />
@@ -122,30 +152,55 @@ export default function TeacherDashboard() {
         {/* Class Performance Chart */}
         <div className="xl:col-span-2 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-black text-slate-800 tracking-tight">Class Performance Index</h3>
+            <h3 className="text-xl font-black text-slate-800 tracking-tight">
+              Class Performance Index
+            </h3>
             <div className="px-4 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 uppercase tracking-widest leading-none">
               Avg Marks %
             </div>
           </div>
           <div className="h-[22rem] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={teacherClassPerformance} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <BarChart
+                data={teacherClassPerformance}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f1f5f9"
+                />
                 <XAxis
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }}
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 600 }}
                   dy={10}
                 />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
-                <Tooltip
-                  cursor={{ fill: '#f8fafc' }}
-                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 600 }}
                 />
-                <Bar dataKey="avgMarks" fill="#8b5cf6" radius={[6, 6, 0, 0]} barSize={40}>
+                <Tooltip
+                  cursor={{ fill: "#f8fafc" }}
+                  contentStyle={{
+                    borderRadius: "16px",
+                    border: "none",
+                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                  }}
+                />
+                <Bar
+                  dataKey="avgMarks"
+                  fill="#8b5cf6"
+                  radius={[6, 6, 0, 0]}
+                  barSize={40}
+                >
                   {teacherClassPerformance.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.avgMarks > 80 ? '#8b5cf6' : '#a78bfa'} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.avgMarks > 80 ? "#8b5cf6" : "#a78bfa"}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -155,14 +210,24 @@ export default function TeacherDashboard() {
 
         {/* Today's Schedule */}
         <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-          <h3 className="text-xl font-black text-slate-800 tracking-tight mb-8">Next Sessions</h3>
+          <h3 className="text-xl font-black text-slate-800 tracking-tight mb-8">
+            Next Sessions
+          </h3>
           <div className="space-y-6">
             {teacherWeeklySchedule.map((session, idx) => (
-              <div key={idx} className="group flex items-start gap-4 p-4 rounded-3xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
+              <div
+                key={idx}
+                className="group flex items-start gap-4 p-4 rounded-3xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100"
+              >
                 <div className="flex flex-col items-center justify-center text-[10px] font-black uppercase text-slate-400 min-w-[60px]">
-                  <Clock size={16} className="mb-1 text-slate-300 group-hover:text-violet-500 transition-colors" />
-                  {session.time.split(' ')[0]}
-                  <span className="text-[8px]">{session.time.split(' ')[1]}</span>
+                  <Clock
+                    size={16}
+                    className="mb-1 text-slate-300 group-hover:text-violet-500 transition-colors"
+                  />
+                  {session.time.split(" ")[0]}
+                  <span className="text-[8px]">
+                    {session.time.split(" ")[1]}
+                  </span>
                 </div>
                 <div className="flex-1">
                   <h4 className="font-black text-slate-800 group-hover:text-violet-600 transition-colors leading-tight">
@@ -190,55 +255,38 @@ export default function TeacherDashboard() {
       {/* Classes Table */}
       <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
         <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-          <h3 className="text-xl font-black text-slate-800 tracking-tight">Assigned Classes Overview</h3>
-          <button className="text-violet-600 text-sm font-bold hover:underline">Manage All</button>
+          <h3 className="text-xl font-black text-slate-800 tracking-tight">
+            Assigned Classes Overview
+          </h3>
+          <button className="text-violet-600 text-sm font-bold hover:underline">
+            Manage All
+          </button>
         </div>
 
         <div className="overflow-x-auto px-4 pb-4">
-          <table className="w-full">
-            <thead>
-              <tr className="text-slate-400 text-[11px] font-black uppercase tracking-widest">
-                <th className="px-6 py-4 text-left">Class Name</th>
-                <th className="px-6 py-4 text-left">Subject ID</th>
-                <th className="px-6 py-4 text-left">Students</th>
-                <th className="px-6 py-4 text-right">Performance</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {classes.map((cls) => (
-                <tr key={cls.id} className="group hover:bg-slate-50/80 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap font-bold text-slate-700 group-hover:text-violet-600 transition-colors">
-                    {cls.name}
-                  </td>
-                  <td className="px-6 py-4 text-sm font-bold text-slate-500">
-                    {cls.id}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-black text-slate-600">{cls.studentCount} Students</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="bg-violet-50 text-violet-600 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-violet-600 hover:text-white transition-all">
-                      Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {classes.length === 0 && (
-                <tr>
-                  <td colSpan="4" className="px-6 py-10 text-center text-sm font-bold text-slate-400 italic">No active classes assigned for current session.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <DataTable
+            columns={classTableColumns}
+            data={classes}
+            rowKey="id"
+            tableClassName="min-w-full"
+            containerClassName="bg-transparent shadow-none border-0"
+          />
         </div>
       </div>
     </div>
   );
 }
 
-function TeacherStatCard({ title, value, subValue, subLabel, icon, trend, isPositive, color }) {
+function TeacherStatCard({
+  title,
+  value,
+  subValue,
+  subLabel,
+  icon,
+  trend,
+  isPositive,
+  color,
+}) {
   const colorStyles = {
     violet: "bg-violet-50 text-violet-600 border-violet-100 shadow-violet-100",
     indigo: "bg-indigo-50 text-indigo-600 border-indigo-100 shadow-indigo-100",
@@ -249,21 +297,39 @@ function TeacherStatCard({ title, value, subValue, subLabel, icon, trend, isPosi
   return (
     <div className="bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
       <div className="flex justify-between items-start mb-4">
-        <div className={`p-3 rounded-2xl ${colorStyles[color]} border shadow-inner group-hover:scale-110 transition-transform`}>
+        <div
+          className={`p-3 rounded-2xl ${colorStyles[color]} border shadow-inner group-hover:scale-110 transition-transform`}
+        >
           {icon}
         </div>
-        <div className={`flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full ${isPositive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
-          {trend === "avg" || trend === "active" ? trend : (isPositive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />)}
+        <div
+          className={`flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full ${
+            isPositive
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-slate-100 text-slate-600"
+          }`}
+        >
+          {trend === "avg" || trend === "active" ? (
+            trend
+          ) : isPositive ? (
+            <ArrowUpRight size={12} />
+          ) : (
+            <ArrowDownRight size={12} />
+          )}
           {trend !== "avg" && trend !== "active" && trend}
         </div>
       </div>
       <div>
-        <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-1">{title}</p>
+        <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-1">
+          {title}
+        </p>
         <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">
           {value}
         </h3>
         <div className="flex items-center justify-between pt-3 border-t border-slate-50">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Status</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+            Status
+          </span>
           <span className="text-sm font-black text-slate-700">{subValue}</span>
         </div>
       </div>
