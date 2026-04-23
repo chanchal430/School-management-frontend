@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchStudentProfile } from '../../redux/slices/studentSlice';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchStudentProfile } from "../../redux/slices/studentSlice";
 import {
   BookOpen,
   Calendar,
@@ -27,26 +27,28 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import StatCard from "../../components/ui/StatCard";
 
 import {
   studentMarksProgression,
   studentHomework,
   upcomingExams,
   studentFinance,
-} from "../../mock/dashboardData";
+  studentStats,
+} from "../../mock/studentDashboardData";
 
 export default function StudentDashboard() {
   const dispatch = useDispatch();
-  const { user } = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { profile, status } = useSelector((state) => state.student);
 
   useEffect(() => {
-    if (user && user.id && status === 'idle') {
+    if (user && user.id && status === "idle") {
       dispatch(fetchStudentProfile(user.id));
     }
   }, [status, dispatch, user]);
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <div className="flex items-center justify-center p-20">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
@@ -54,44 +56,7 @@ export default function StudentDashboard() {
     );
   }
 
-  const stats = [
-    {
-      title: "Attendance",
-      value: profile?.attendance ? `${profile.attendance}%` : "94%",
-      subValue: "Good Standing",
-      icon: <CheckCircle2 size={20} />,
-      trend: "stable",
-      isPositive: true,
-      color: "emerald"
-    },
-    {
-      title: "Current Grade",
-      value: "A (3.8)",
-      subValue: "Keep it up!",
-      icon: <Trophy size={20} />,
-      trend: "top 5%",
-      isPositive: true,
-      color: "indigo"
-    },
-    {
-      title: "Upcoming Exams",
-      value: upcomingExams.length.toString(),
-      subValue: "Next in 15 days",
-      icon: <Calendar size={20} />,
-      trend: "exam mode",
-      isPositive: false,
-      color: "amber"
-    },
-    {
-      title: "Pending Tasks",
-      value: studentHomework.filter(h => h.status !== 'Done').length.toString(),
-      subValue: "2 due today",
-      icon: <PencilLine size={20} />,
-      trend: "priority",
-      isPositive: false,
-      color: "rose"
-    },
-  ];
+  const stats = studentStats;
 
   return (
     <div className="space-y-10 pb-10">
@@ -99,7 +64,11 @@ export default function StudentDashboard() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
         <div className="space-y-1">
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-            Hi, <span className="text-emerald-600">{profile?.name || user?.name || "Student"}</span>! 🚀
+            Hi,{" "}
+            <span className="text-emerald-600">
+              {profile?.name || user?.name || "Student"}
+            </span>
+            ! 🚀
           </h1>
           <p className="text-slate-500 font-medium flex items-center gap-2">
             <BookOpen size={16} />
@@ -112,8 +81,12 @@ export default function StudentDashboard() {
             <Clock size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase text-emerald-600 tracking-widest leading-none mb-1">Final Exams In</p>
-            <h4 className="text-xl font-black text-slate-800">15 Days, 04 Hours</h4>
+            <p className="text-[10px] font-black uppercase text-emerald-600 tracking-widest leading-none mb-1">
+              Final Exams In
+            </p>
+            <h4 className="text-xl font-black text-slate-800">
+              15 Days, 04 Hours
+            </h4>
           </div>
         </div>
       </div>
@@ -121,41 +94,98 @@ export default function StudentDashboard() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <StudentStatCard key={stat.title} {...stat} />
+          <StatCard key={stat.title} {...stat} />
         ))}
       </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-
         {/* Performance Chart */}
         <div className="xl:col-span-2 bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-black text-slate-800 tracking-tight">Learning Progress</h3>
+            <h3 className="text-xl font-black text-slate-800 tracking-tight">
+              Learning Progress
+            </h3>
             <div className="flex gap-2">
-              <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-lg bg-emerald-100 text-emerald-700">Math</span>
-              <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-lg bg-indigo-100 text-indigo-700">English</span>
+              <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-lg bg-emerald-100 text-emerald-700">
+                Math
+              </span>
+              <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-lg bg-indigo-100 text-indigo-700">
+                English
+              </span>
             </div>
           </div>
           <div className="h-[22rem] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={studentMarksProgression} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <LineChart
+                data={studentMarksProgression}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f1f5f9"
+                />
                 <XAxis
                   dataKey="exam"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }}
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 600 }}
                   dy={10}
                 />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} domain={[60, 100]} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 600 }}
+                  domain={[60, 100]}
                 />
-                <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', fontWeight: 600, fontSize: '12px' }} />
-                <Line type="monotone" dataKey="math" stroke="#10b981" strokeWidth={4} dot={{ r: 6, fill: '#10b981', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="science" stroke="#6366f1" strokeWidth={4} strokeDasharray="5 5" />
-                <Line type="monotone" dataKey="english" stroke="#f59e0b" strokeWidth={4} dot={{ r: 6, fill: '#f59e0b', strokeWidth: 2, stroke: '#fff' }} />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "16px",
+                    border: "none",
+                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                  }}
+                />
+                <Legend
+                  iconType="circle"
+                  wrapperStyle={{
+                    paddingTop: "20px",
+                    fontWeight: 600,
+                    fontSize: "12px",
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="math"
+                  stroke="#10b981"
+                  strokeWidth={4}
+                  dot={{
+                    r: 6,
+                    fill: "#10b981",
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                  activeDot={{ r: 8 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="science"
+                  stroke="#6366f1"
+                  strokeWidth={4}
+                  strokeDasharray="5 5"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="english"
+                  stroke="#f59e0b"
+                  strokeWidth={4}
+                  dot={{
+                    r: 6,
+                    fill: "#f59e0b",
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -164,19 +194,44 @@ export default function StudentDashboard() {
         {/* Sidebar Tasks */}
         <div className="space-y-6">
           <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-            <h3 className="text-xl font-black text-slate-800 tracking-tight mb-6">Homework</h3>
+            <h3 className="text-xl font-black text-slate-800 tracking-tight mb-6">
+              Homework
+            </h3>
             <div className="space-y-4">
               {studentHomework.map((hw) => (
-                <div key={hw.id} className="flex items-center gap-4 p-4 rounded-3xl hover:bg-slate-50 transition-all border border-slate-50">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold ${hw.status === 'Done' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500'}`}>
-                    {hw.status === 'Done' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+                <div
+                  key={hw.id}
+                  className="flex items-center gap-4 p-4 rounded-3xl hover:bg-slate-50 transition-all border border-slate-50"
+                >
+                  <div
+                    className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold ${
+                      hw.status === "Done"
+                        ? "bg-emerald-100 text-emerald-600"
+                        : "bg-slate-100 text-slate-500"
+                    }`}
+                  >
+                    {hw.status === "Done" ? (
+                      <CheckCircle2 size={20} />
+                    ) : (
+                      <AlertCircle size={20} />
+                    )}
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-sm font-black text-slate-800 leading-none mb-1">{hw.subject}</h4>
-                    <p className="text-xs font-bold text-slate-400 capitalize">{hw.task}</p>
+                    <h4 className="text-sm font-black text-slate-800 leading-none mb-1">
+                      {hw.subject}
+                    </h4>
+                    <p className="text-xs font-bold text-slate-400 capitalize">
+                      {hw.task}
+                    </p>
                   </div>
                   <div className="text-right">
-                    <span className={`text-[10px] font-black uppercase px-2 py-1 rounded-lg ${hw.dueDate === 'Tomorrow' ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-500'}`}>
+                    <span
+                      className={`text-[10px] font-black uppercase px-2 py-1 rounded-lg ${
+                        hw.dueDate === "Tomorrow"
+                          ? "bg-rose-100 text-rose-600"
+                          : "bg-slate-100 text-slate-500"
+                      }`}
+                    >
                       {hw.dueDate}
                     </span>
                   </div>
@@ -193,12 +248,18 @@ export default function StudentDashboard() {
                 <h3 className="text-xl font-black">Goals</h3>
               </div>
               <p className="text-indigo-100 text-sm font-medium leading-relaxed mb-4">
-                Complete all Physics assignments before Sunday to unlock the "Science Wizard" badge!
+                Complete all Physics assignments before Sunday to unlock the
+                "Science Wizard" badge!
               </p>
               <div className="w-full bg-white/10 rounded-full h-1.5 mb-2">
-                <div className="bg-indigo-300 h-1.5 rounded-full" style={{ width: '65%' }}></div>
+                <div
+                  className="bg-indigo-300 h-1.5 rounded-full"
+                  style={{ width: "65%" }}
+                ></div>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-indigo-200">65% Progress</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-indigo-200">
+                65% Progress
+              </span>
             </div>
           </div>
         </div>
@@ -213,7 +274,9 @@ export default function StudentDashboard() {
               <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl group-hover:rotate-12 transition-transform">
                 <Wallet size={24} />
               </div>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">Financial Overview</h3>
+              <h3 className="text-xl font-black text-slate-800 tracking-tight">
+                Financial Overview
+              </h3>
             </div>
             <span className="text-[10px] font-black uppercase px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full tracking-widest">
               Live Balance
@@ -222,16 +285,28 @@ export default function StudentDashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="p-4 rounded-3xl bg-slate-50 border border-slate-50">
-              <p className="text-[10px] font-black uppercase text-slate-400 mb-1 tracking-widest">Total Fees</p>
-              <h4 className="text-lg font-black text-slate-800">{studentFinance.totalFees}</h4>
+              <p className="text-[10px] font-black uppercase text-slate-400 mb-1 tracking-widest">
+                Total Fees
+              </p>
+              <h4 className="text-lg font-black text-slate-800">
+                {studentFinance.totalFees}
+              </h4>
             </div>
             <div className="p-4 rounded-3xl bg-emerald-50/50 border border-emerald-100/50">
-              <p className="text-[10px] font-black uppercase text-emerald-600 mb-1 tracking-widest">Paid</p>
-              <h4 className="text-lg font-black text-emerald-700">{studentFinance.paidAmount}</h4>
+              <p className="text-[10px] font-black uppercase text-emerald-600 mb-1 tracking-widest">
+                Paid
+              </p>
+              <h4 className="text-lg font-black text-emerald-700">
+                {studentFinance.paidAmount}
+              </h4>
             </div>
             <div className="p-4 rounded-3xl bg-rose-50/50 border border-rose-100/50">
-              <p className="text-[10px] font-black uppercase text-rose-600 mb-1 tracking-widest">Balance</p>
-              <h4 className="text-lg font-black text-rose-700">{studentFinance.balanceAmount}</h4>
+              <p className="text-[10px] font-black uppercase text-rose-600 mb-1 tracking-widest">
+                Balance
+              </p>
+              <h4 className="text-lg font-black text-rose-700">
+                {studentFinance.balanceAmount}
+              </h4>
             </div>
           </div>
 
@@ -242,19 +317,30 @@ export default function StudentDashboard() {
             </h4>
             <div className="space-y-3">
               {studentFinance.transactions.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between p-3 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-colors">
+                <div
+                  key={tx.id}
+                  className="flex items-center justify-between p-3 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-colors"
+                >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 transition-colors">
                       <ArrowUpRight size={14} />
                     </div>
                     <div>
-                      <p className="text-xs font-black text-slate-700 leading-none">{tx.title}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">{tx.date}</p>
+                      <p className="text-xs font-black text-slate-700 leading-none">
+                        {tx.title}
+                      </p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+                        {tx.date}
+                      </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-black text-slate-800">{tx.amount}</p>
-                    <p className="text-[9px] font-black text-emerald-600 uppercase">Successful</p>
+                    <p className="text-xs font-black text-slate-800">
+                      {tx.amount}
+                    </p>
+                    <p className="text-[9px] font-black text-emerald-600 uppercase">
+                      Successful
+                    </p>
                   </div>
                 </div>
               ))}
@@ -269,30 +355,47 @@ export default function StudentDashboard() {
               <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:rotate-12 transition-transform">
                 <CreditCard size={24} />
               </div>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">Payment Method</h3>
+              <h3 className="text-xl font-black text-slate-800 tracking-tight">
+                Payment Method
+              </h3>
             </div>
-            <button className="text-[10px] font-black text-indigo-600 uppercase hover:underline">Manage Methods</button>
+            <button className="text-[10px] font-black text-indigo-600 uppercase hover:underline">
+              Manage Methods
+            </button>
           </div>
 
           <div className="space-y-6 mb-8">
             {studentFinance.savedCards.map((card) => (
-              <div key={card.id} className={`relative p-6 h-40 rounded-[2rem] text-white shadow-lg overflow-hidden transition-transform hover:-translate-y-1 ${
-                card.color === 'indigo' ? 'bg-gradient-to-br from-indigo-600 to-indigo-800' : 'bg-gradient-to-br from-slate-700 to-slate-900'
-              }`}>
+              <div
+                key={card.id}
+                className={`relative p-6 h-40 rounded-[2rem] text-white shadow-lg overflow-hidden transition-transform hover:-translate-y-1 ${
+                  card.color === "indigo"
+                    ? "bg-gradient-to-br from-indigo-600 to-indigo-800"
+                    : "bg-gradient-to-br from-slate-700 to-slate-900"
+                }`}
+              >
                 <div className="absolute top-0 right-0 p-6 opacity-20">
                   <CreditCard size={80} strokeWidth={1} />
                 </div>
                 <div className="relative z-10 flex flex-col h-full justify-between">
                   <div className="flex justify-between items-start">
                     <div className="w-10 h-7 bg-white/20 rounded-md backdrop-blur-sm border border-white/10" />
-                    <span className="text-xs font-black italic tracking-widest">{card.type}</span>
+                    <span className="text-xs font-black italic tracking-widest">
+                      {card.type}
+                    </span>
                   </div>
                   <div>
-                    <p className="text-lg font-black tracking-[0.2em] mb-1">•••• •••• •••• {card.last4}</p>
+                    <p className="text-lg font-black tracking-[0.2em] mb-1">
+                      •••• •••• •••• {card.last4}
+                    </p>
                     <div className="flex justify-between items-end">
                       <div>
-                        <p className="text-[8px] font-black uppercase tracking-widest opacity-60">Expiry</p>
-                        <p className="text-xs font-bold leading-none">{card.expiry}</p>
+                        <p className="text-[8px] font-black uppercase tracking-widest opacity-60">
+                          Expiry
+                        </p>
+                        <p className="text-xs font-bold leading-none">
+                          {card.expiry}
+                        </p>
                       </div>
                       <div className="px-2 py-1 rounded-lg bg-white text-indigo-900 text-[10px] font-black uppercase">
                         Active
@@ -316,62 +419,42 @@ export default function StudentDashboard() {
       {/* Upcoming Exams Row */}
       <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
         <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-          <h3 className="text-xl font-black text-slate-800 tracking-tight">Exam Schedule</h3>
-          <button className="text-emerald-600 text-sm font-bold hover:underline">Download Admit Card</button>
+          <h3 className="text-xl font-black text-slate-800 tracking-tight">
+            Exam Schedule
+          </h3>
+          <button className="text-emerald-600 text-sm font-bold hover:underline">
+            Download Admit Card
+          </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 divide-x divide-slate-50">
           {upcomingExams.map((exam, idx) => (
-            <div key={idx} className="p-8 hover:bg-slate-50 transition-colors group">
+            <div
+              key={idx}
+              className="p-8 hover:bg-slate-50 transition-colors group"
+            >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl group-hover:bg-emerald-600 group-hover:text-white transition-all">
                   <Calendar size={20} />
                 </div>
                 <div>
-                  <h4 className="font-black text-slate-800 leading-none">{exam.subject}</h4>
-                  <p className="text-xs font-bold text-slate-400 mt-1">{exam.time}</p>
+                  <h4 className="font-black text-slate-800 leading-none">
+                    {exam.subject}
+                  </h4>
+                  <p className="text-xs font-bold text-slate-400 mt-1">
+                    {exam.time}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-lg font-black text-slate-700">{exam.date}</span>
+                <span className="text-lg font-black text-slate-700">
+                  {exam.date}
+                </span>
                 <button className="p-2 border border-slate-100 rounded-xl hover:bg-white hover:border-emerald-200 text-slate-300 hover:text-emerald-600 transition-all">
                   <ArrowUpRight size={18} />
                 </button>
               </div>
             </div>
           ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StudentStatCard({ title, value, subValue, icon, trend, isPositive, color }) {
-  const colorStyles = {
-    emerald: "bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100",
-    indigo: "bg-indigo-50 text-indigo-600 border-indigo-100 shadow-indigo-100",
-    amber: "bg-amber-50 text-amber-600 border-amber-100 shadow-amber-100",
-    rose: "bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100",
-  };
-
-  return (
-    <div className="bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-      <div className="flex justify-between items-start mb-4">
-        <div className={`p-3 rounded-2xl ${colorStyles[color]} border shadow-inner group-hover:scale-110 transition-transform`}>
-          {icon}
-        </div>
-        <div className={`flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full ${isPositive ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-          {trend === "stable" || trend === "priority" || trend === "exam mode" ? trend : (isPositive ? <ArrowUpRight size={12} /> : <Target size={12} />)}
-          {trend !== "stable" && trend !== "priority" && trend !== "exam mode" && trend}
-        </div>
-      </div>
-      <div>
-        <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-1">{title}</p>
-        <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">
-          {value}
-        </h3>
-        <div className="flex items-center justify-between pt-3 border-t border-slate-50">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Status</span>
-          <span className="text-sm font-black text-slate-700">{subValue}</span>
         </div>
       </div>
     </div>

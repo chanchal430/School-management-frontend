@@ -70,7 +70,7 @@ export default function AdminLayout() {
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
     { icon: Building2, label: "Front Office", path: "/admin/front-office" },
     { icon: CreditCard, label: "Fees Collection", path: "/admin/fees" },
-    { icon: GraduationCap, label: "Student Information", path: "/admin/students" },
+    { icon: GraduationCap, label: "Student Information", path: "/admin/student" },
     { icon: TrendingUp, label: "Income", path: "/admin/income" },
     { icon: TrendingDown, label: "Expense", path: "/admin/expense" },
     { icon: ClipboardCheck, label: "Attendance", path: "/admin/attendance" },
@@ -128,7 +128,7 @@ export default function AdminLayout() {
               key={item.label}
               icon={item.icon}
               label={item.label}
-              active={location.pathname === item.path || (item.label === "Dashboard" && location.pathname === "/admin")}
+              active={location.pathname.startsWith(item.path) || (item.label === "Dashboard" && location.pathname === "/admin")}
               onClick={() => navigate(item.path)}
             />
           ))}

@@ -5,7 +5,7 @@ import SlideOver from "../../ui/SlideOver";
 import FilterBar from "../../ui/FilterBar";
 import FilterItem from "../../ui/FilterItem";
 import SectionCard from "../../ui/SectionCard";
-import { admissionEnquiriesData } from "../../../mock/frontOfficeData";
+import { admissionEnquiryStats, admissionEnquiriesData } from "../../../mock/frontOfficeData";
 import {
   Users,
   FileText,
@@ -98,28 +98,28 @@ export default function AdmissionEnquiry() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Enquiries"
-          value="1,245"
+          value={admissionEnquiryStats.totalEnquiries}
           icon={<Users size={20} />}
           color="indigo"
           trend="+15%"
         />
         <StatCard
           title="Active Leads"
-          value="384"
+          value={admissionEnquiryStats.activeEnquiries}
           icon={<Clock size={20} />}
           color="amber"
           trend="30% of total"
         />
         <StatCard
           title="Admissions Done"
-          value="850"
+          value={admissionEnquiryStats.closedEnquiries}
           icon={<CheckCircle size={20} />}
           color="emerald"
           trend="68% Success"
         />
         <StatCard
           title="Follow Ups"
-          value="45"
+          value={admissionEnquiryStats.pendingFollowUp}
           icon={<FileText size={20} />}
           color="rose"
         />
@@ -152,9 +152,7 @@ export default function AdmissionEnquiry() {
         <FilterItem label="Source">
           <select
             value={filters.source}
-            onChange={(e) =>
-              setFilters({ ...filters, source: e.target.value })
-            }
+            onChange={(e) => setFilters({ ...filters, source: e.target.value })}
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all appearance-none cursor-pointer"
           >
             <option>All</option>
@@ -168,9 +166,7 @@ export default function AdmissionEnquiry() {
         <FilterItem label="Status">
           <select
             value={filters.status}
-            onChange={(e) =>
-              setFilters({ ...filters, status: e.target.value })
-            }
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all appearance-none cursor-pointer"
           >
             <option>All</option>

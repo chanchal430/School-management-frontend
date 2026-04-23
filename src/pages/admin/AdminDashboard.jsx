@@ -40,6 +40,7 @@ import {
   Legend,
 } from "recharts";
 import DataTable from "../../components/ui/DataTable";
+import StatCard from "../../components/ui/StatCard";
 
 import {
   monthlyFinanceData,
@@ -47,7 +48,7 @@ import {
   dashboardStats,
   adminUpcomingEvents,
   adminRecentActivity,
-} from "../../mock/dashboardData";
+} from "../../mock/adminDashboardData";
 
 const IconMap = {
   Sun: Sun,
@@ -150,7 +151,7 @@ export default function AdminDashboard() {
 
       {/* Summary Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
-        <DashboardStatCard
+        <StatCard
           title="Today's Income"
           value={dashboardStats.todayIncome}
           subValue={dashboardStats.monthIncome}
@@ -159,9 +160,17 @@ export default function AdminDashboard() {
           trend="+12.5%"
           isPositive={true}
           color="emerald"
+          sparklineData={[
+            { value: 30 },
+            { value: 45 },
+            { value: 40 },
+            { value: 60 },
+            { value: 55 },
+            { value: 80 },
+          ]}
         />
 
-        <DashboardStatCard
+        <StatCard
           title="Today's Expense"
           value={dashboardStats.todayExpense}
           subValue={dashboardStats.monthExpense}
@@ -170,9 +179,17 @@ export default function AdminDashboard() {
           trend="-2.4%"
           isPositive={false}
           color="rose"
+          sparklineData={[
+            { value: 30 },
+            { value: 20 },
+            { value: 25 },
+            { value: 15 },
+            { value: 30 },
+            { value: 10 },
+          ]}
         />
 
-        <DashboardStatCard
+        <StatCard
           title="Total Students"
           value={dashboardStats.totalStudents}
           subValue={dashboardStats.presentStudents}
@@ -184,9 +201,17 @@ export default function AdminDashboard() {
           ).toFixed(1)}%`}
           isPositive={true}
           color="indigo"
+          sparklineData={[
+            { value: 40 },
+            { value: 50 },
+            { value: 45 },
+            { value: 70 },
+            { value: 65 },
+            { value: 90 },
+          ]}
         />
 
-        <DashboardStatCard
+        <StatCard
           title="Total Staff"
           value={dashboardStats.totalStaff}
           subValue={dashboardStats.presentStaff}
@@ -195,6 +220,14 @@ export default function AdminDashboard() {
           trend="96.4%"
           isPositive={true}
           color="amber"
+          sparklineData={[
+            { value: 50 },
+            { value: 60 },
+            { value: 55 },
+            { value: 80 },
+            { value: 75 },
+            { value: 95 },
+          ]}
         />
       </div>
 
@@ -522,134 +555,6 @@ export default function AdminDashboard() {
               />
             </button>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DashboardStatCard({
-  title,
-  value,
-  subValue,
-  subLabel,
-  icon,
-  trend,
-  isPositive,
-  color,
-}) {
-  const colorStyles = {
-    emerald: {
-      bg: "bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100",
-      pill: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
-      chart: "#10b981",
-    },
-    rose: {
-      bg: "bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100",
-      pill: "bg-rose-500/10 text-rose-700 border-rose-500/20",
-      chart: "#f43f5e",
-    },
-    indigo: {
-      bg: "bg-indigo-50 text-indigo-600 border-indigo-100 shadow-indigo-100",
-      pill: "bg-indigo-500/10 text-indigo-700 border-indigo-500/20",
-      chart: "#6366f1",
-    },
-    amber: {
-      bg: "bg-amber-50 text-amber-600 border-amber-100 shadow-amber-100",
-      pill: "bg-amber-500/10 text-amber-700 border-amber-500/20",
-      chart: "#f59e0b",
-    },
-  };
-
-  const style = colorStyles[color];
-
-  // Dummy data for sparkline
-  const sparklineData = [
-    { value: 30 },
-    { value: isPositive ? 45 : 20 },
-    { value: isPositive ? 40 : 25 },
-    { value: isPositive ? 60 : 15 },
-    { value: isPositive ? 55 : 30 },
-    { value: isPositive ? 80 : 10 },
-  ];
-
-  return (
-    <div className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 group flex flex-col relative overflow-hidden">
-      {/* Subtle background glow on hover */}
-      <div
-        className={`absolute top-0 right-0 w-32 h-32 blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-full pointer-events-none ${
-          style.bg.split(" ")[0]
-        }`}
-      ></div>
-
-      <div className="flex justify-between items-start mb-4 gap-3 relative z-10">
-        <div
-          className={`p-2 rounded-xl ${style.bg} border shadow-inner group-hover:scale-110 transition-transform shrink-0`}
-        >
-          {icon}
-        </div>
-        <div
-          className={`flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border backdrop-blur-md shrink-0 whitespace-nowrap ${style.pill}`}
-        >
-          {/* {isPositive ? <ArrowUpRight size={14} className="stroke-[3]" /> : <ArrowDownRight size={14} className="stroke-[3]" />} */}
-          {trend}
-        </div>
-      </div>
-
-      <div className="relative z-10 flex-1 flex flex-col">
-        <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-1 truncate">
-          {title}
-        </p>
-        <div className="flex items-end justify-between gap-2 mb-3">
-          <h3 className="text-2xl xl:text-3xl font-black text-slate-800 tracking-tight shrink-0">
-            {value}
-          </h3>
-
-          {/* Mini Sparkline Chart */}
-          <div className="w-16 h-8 opacity-50 group-hover:opacity-100 transition-opacity shrink-0">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={sparklineData}>
-                <defs>
-                  <linearGradient
-                    id={`gradient-${color}`}
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={style.chart}
-                      stopOpacity={0.3}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={style.chart}
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                </defs>
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke={style.chart}
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill={`url(#gradient-${color})`}
-                  isAnimationActive={false}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter shrink-0">
-            {subLabel}
-          </span>
-          <span className="text-xs xl:text-sm font-black text-slate-700 shrink-0 text-right">
-            {subValue}
-          </span>
         </div>
       </div>
     </div>

@@ -25,11 +25,14 @@ import {
   Cell,
 } from "recharts";
 import DataTable from "../../components/ui/DataTable";
+import StatCard from "../../components/ui/StatCard";
 
 import {
   teacherClassPerformance,
   teacherWeeklySchedule,
-} from "../../mock/dashboardData";
+  teacherStats,
+  classTableColumns,
+} from "../../mock/teacherDashboardData";
 
 export default function TeacherDashboard() {
   const dispatch = useDispatch();
@@ -75,44 +78,7 @@ export default function TeacherDashboard() {
     },
   ];
 
-  const stats = [
-    {
-      title: "My Classes",
-      value: classes.length || "4",
-      subValue: "2 Classes Today",
-      icon: <BookOpen size={20} />,
-      trend: "+1",
-      isPositive: true,
-      color: "violet",
-    },
-    {
-      title: "Total Students",
-      value: "124",
-      subValue: "92% Attendance",
-      icon: <Users size={20} />,
-      trend: "avg",
-      isPositive: true,
-      color: "indigo",
-    },
-    {
-      title: "Pending Assignments",
-      value: "12",
-      subValue: "5 Due Tomorrow",
-      icon: <PencilLine size={20} />,
-      trend: "active",
-      isPositive: false,
-      color: "rose",
-    },
-    {
-      title: "Attendance Recorded",
-      value: "3/4",
-      subValue: "75% Done",
-      icon: <ClipboardCheck size={20} />,
-      trend: "8:00 AM",
-      isPositive: true,
-      color: "teal",
-    },
-  ];
+  const stats = teacherStats;
 
   return (
     <div className="space-y-10 pb-10">
@@ -143,7 +109,7 @@ export default function TeacherDashboard() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <TeacherStatCard key={stat.title} {...stat} />
+          <StatCard key={stat.title} {...stat} />
         ))}
       </div>
 
@@ -271,66 +237,6 @@ export default function TeacherDashboard() {
             tableClassName="min-w-full"
             containerClassName="bg-transparent shadow-none border-0"
           />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TeacherStatCard({
-  title,
-  value,
-  subValue,
-  subLabel,
-  icon,
-  trend,
-  isPositive,
-  color,
-}) {
-  const colorStyles = {
-    violet: "bg-violet-50 text-violet-600 border-violet-100 shadow-violet-100",
-    indigo: "bg-indigo-50 text-indigo-600 border-indigo-100 shadow-indigo-100",
-    rose: "bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100",
-    teal: "bg-teal-50 text-teal-600 border-teal-100 shadow-teal-100",
-  };
-
-  return (
-    <div className="bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-      <div className="flex justify-between items-start mb-4">
-        <div
-          className={`p-3 rounded-2xl ${colorStyles[color]} border shadow-inner group-hover:scale-110 transition-transform`}
-        >
-          {icon}
-        </div>
-        <div
-          className={`flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full ${
-            isPositive
-              ? "bg-emerald-100 text-emerald-700"
-              : "bg-slate-100 text-slate-600"
-          }`}
-        >
-          {trend === "avg" || trend === "active" ? (
-            trend
-          ) : isPositive ? (
-            <ArrowUpRight size={12} />
-          ) : (
-            <ArrowDownRight size={12} />
-          )}
-          {trend !== "avg" && trend !== "active" && trend}
-        </div>
-      </div>
-      <div>
-        <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest mb-1">
-          {title}
-        </p>
-        <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">
-          {value}
-        </h3>
-        <div className="flex items-center justify-between pt-3 border-t border-slate-50">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-            Status
-          </span>
-          <span className="text-sm font-black text-slate-700">{subValue}</span>
         </div>
       </div>
     </div>

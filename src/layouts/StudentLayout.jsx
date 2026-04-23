@@ -108,7 +108,7 @@ export default function StudentLayout() {
               key={item.label}
               icon={item.icon}
               label={item.label}
-              active={location.pathname === item.path || (item.label === "My Dashboard" && location.pathname === "/student")}
+              active={location.pathname.startsWith(item.path) || (item.label === "My Dashboard" && location.pathname === "/student")}
               onClick={() => navigate(item.path)}
               colorClass="bg-emerald-600 shadow-emerald-500/20"
               hoverClass="hover:bg-white/5"

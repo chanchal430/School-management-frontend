@@ -5,7 +5,10 @@ import SlideOver from "../../ui/SlideOver";
 import FilterBar from "../../ui/FilterBar";
 import FilterItem from "../../ui/FilterItem";
 import SectionCard from "../../ui/SectionCard";
-import { visitorBookData } from "../../../mock/frontOfficeData";
+import {
+  visitorBookData,
+  frontOfficeStats,
+} from "../../../mock/frontOfficeData";
 import {
   Users,
   DoorOpen,
@@ -77,19 +80,19 @@ export default function VisitorBook() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
           title="Total Visitors Today"
-          value="42"
+          value={frontOfficeStats.totalEnquiries.toString()}
           icon={<Users size={20} />}
           color="indigo"
         />
         <StatCard
           title="Currently In Campus"
-          value="12"
+          value={frontOfficeStats.activeEnquiries.toString()}
           icon={<DoorOpen size={20} />}
           color="amber"
         />
         <StatCard
           title="Checked Out"
-          value="30"
+          value={frontOfficeStats.closedEnquiries.toString()}
           icon={<DoorClosed size={20} />}
           color="emerald"
         />
@@ -157,10 +160,10 @@ export default function VisitorBook() {
         </FilterItem>
       </FilterBar>
 
-      <SectionCard 
-        title="Visitor Log" 
-        count={data.length} 
-        onAdd={() => setIsFormOpen(true)} 
+      <SectionCard
+        title="Visitor Log"
+        count={data.length}
+        onAdd={() => setIsFormOpen(true)}
         addLabel="Add Visitor"
       >
         <DataTable columns={columns} data={data} actions={actions} />

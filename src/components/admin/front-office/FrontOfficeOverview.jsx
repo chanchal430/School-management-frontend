@@ -1,4 +1,5 @@
 import {
+  AreaChart,
   UserPlus,
   Users,
   Phone,
@@ -14,25 +15,19 @@ import {
 import { useNavigate } from "react-router-dom";
 import StatCard from "../../ui/StatCard";
 import SectionCard from "../../ui/SectionCard";
+import QuickActionCard from "../../ui/QuickActionCard";
 import {
-  AreaChart,
+  weeklyData,
+  frontOfficeOverviewStats,
+} from "../../../mock/frontOfficeData";
+import {
+  ResponsiveContainer,
   Area,
+  CartesianGrid,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from "recharts";
-
-const weeklyData = [
-  { name: "Mon", enquiries: 40, visitors: 24 },
-  { name: "Tue", enquiries: 30, visitors: 13 },
-  { name: "Wed", enquiries: 20, visitors: 58 },
-  { name: "Thu", enquiries: 27, visitors: 39 },
-  { name: "Fri", enquiries: 18, visitors: 48 },
-  { name: "Sat", enquiries: 23, visitors: 38 },
-  { name: "Sun", enquiries: 34, visitors: 43 },
-];
 
 const modules = [
   {
@@ -78,34 +73,21 @@ export default function FrontOfficeOverview() {
   const navigate = useNavigate();
   return (
     <div className="space-y-6">
-      <SectionCard 
-        title="Quick Actions" 
+      <SectionCard
+        title="Quick Actions"
         description="Open your most-used front office modules."
         headerClassName="bg-white/50"
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 p-6 pt-2">
-          {modules.map((mod) => {
-            const Icon = mod.icon;
-            return (
-              <button
-                key={mod.id}
-                onClick={() => navigate(mod.id)}
-                className="group flex items-center gap-3 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-5 text-left transition hover:border-indigo-200 hover:bg-indigo-50"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-white text-slate-900 shadow-sm">
-                  <Icon
-                    size={20}
-                    className={`${mod.color}`}
-                    strokeWidth={2}
-                  />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">{mod.label}</p>
-                  <p className="text-xs text-slate-500 group-hover:text-indigo-600 transition-colors font-bold uppercase tracking-wider">Open Section</p>
-                </div>
-              </button>
-            );
-          })}
+          {modules.map((mod) => (
+            <QuickActionCard
+              key={mod.id}
+              icon={mod.icon}
+              label={mod.label}
+              color={mod.color}
+              onClick={() => navigate(mod.id)}
+            />
+          ))}
         </div>
       </SectionCard>
 
@@ -129,19 +111,19 @@ export default function FrontOfficeOverview() {
           </div>
           <div className="px-6 py-8 sm:px-8">
             <div className="mb-6 grid gap-4 sm:grid-cols-2">
-              <StatCard 
-                 title="Total Enquiries" 
-                 value="2,543" 
-                 trend="+12%" 
-                 icon={<UserPlus size={18}/>}
-                 color="indigo"
+              <StatCard
+                title="Total Enquiries"
+                value={frontOfficeOverviewStats.totalVisitors}
+                trend="+12%"
+                icon={<UserPlus size={18} />}
+                color="indigo"
               />
-              <StatCard 
-                 title="Today's Visitors" 
-                 value="145" 
-                 trend="+5%" 
-                 icon={<Users size={18}/>}
-                 color="emerald"
+              <StatCard
+                title="Today's Visitors"
+                value={frontOfficeOverviewStats.todayVisitors}
+                trend="+5%"
+                icon={<Users size={18} />}
+                color="emerald"
               />
             </div>
             <div className="h-[320px] w-full">
@@ -289,7 +271,9 @@ export default function FrontOfficeOverview() {
                       {item.time}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-slate-300 italic">{item.desc}</p>
+                  <p className="mt-2 text-sm text-slate-300 italic">
+                    {item.desc}
+                  </p>
                 </div>
               </div>
             ))}

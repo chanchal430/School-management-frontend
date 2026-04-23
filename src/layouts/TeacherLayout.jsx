@@ -108,7 +108,7 @@ export default function TeacherLayout() {
               key={item.label}
               icon={item.icon}
               label={item.label}
-              active={location.pathname === item.path || (item.label === "Dashboard" && location.pathname === "/teacher")}
+              active={location.pathname.startsWith(item.path) || (item.label === "Dashboard" && location.pathname === "/teacher")}
               onClick={() => navigate(item.path)}
               colorClass="bg-violet-600 shadow-violet-500/20"
               hoverClass="hover:bg-white/5"

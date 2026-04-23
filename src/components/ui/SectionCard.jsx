@@ -1,20 +1,28 @@
 import { Plus } from "lucide-react";
 
-export default function SectionCard({ 
-  title, 
-  count, 
-  onAdd, 
-  addLabel, 
+export default function SectionCard({
+  title,
+  description,
+  count,
+  onAdd,
+  addLabel,
   children,
-  headerClassName = "bg-slate-50/50" 
+  headerClassName = "bg-slate-50/50",
 }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-      <div className={`px-6 py-5 border-b border-slate-50 flex justify-between items-center ${headerClassName}`}>
+      <div
+        className={`px-6 py-5 border-b border-slate-50 flex justify-between items-center ${headerClassName}`}
+      >
         <div className="space-y-1">
           <h3 className="text-lg font-black text-slate-800 tracking-tight">
             {title}
           </h3>
+          {description && (
+            <p className="text-xs font-medium text-slate-500 italic">
+              {description}
+            </p>
+          )}
           {count !== undefined && (
             <p className="text-xs font-medium text-slate-500 italic">
               Showing {count} records
