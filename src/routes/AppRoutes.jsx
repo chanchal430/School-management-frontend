@@ -31,6 +31,15 @@ const AttendanceManagement = lazy(() =>
 const AcademicsManagement = lazy(() =>
   import("../pages/admin/academics/AcademicsManagement"),
 );
+const HrManagement = lazy(() =>
+  import("../pages/admin/hr/HrManagement"),
+);
+const HomeworkManagement = lazy(() =>
+  import("../pages/admin/homework/HomeworkManagement"),
+);
+const LibraryManagement = lazy(() =>
+  import("../pages/admin/library/LibraryManagement"),
+);
 const ComingSoon = lazy(() => import("../pages/ComingSoon"));
 
 // Student Module Components (Nested)
@@ -129,6 +138,34 @@ const HolidayManagement = lazy(() =>
 const CertificateManagement = lazy(() =>
   import("../components/admin/academics/CertificateManagement"),
 );
+
+// HR Module Components (Nested)
+const HrHub = lazy(() => import("../components/admin/hr/HrHub"));
+const AddStaff = lazy(() => import("../components/admin/hr/AddStaff"));
+const StaffDirectory = lazy(() => import("../components/admin/hr/StaffDirectory"));
+const ManualAttendance = lazy(() => import("../components/admin/hr/ManualAttendance"));
+const AttendanceReport = lazy(() => import("../components/admin/hr/AttendanceReport"));
+const Payroll = lazy(() => import("../components/admin/hr/Payroll"));
+const ApplyLeave = lazy(() => import("../components/admin/hr/ApplyLeave"));
+const ApproveLeave = lazy(() => import("../components/admin/hr/ApproveLeave"));
+const LeaveType = lazy(() => import("../components/admin/hr/LeaveType"));
+const DepartmentManagement = lazy(() => import("../components/admin/hr/DepartmentManagement"));
+const DesignationManagement = lazy(() => import("../components/admin/hr/DesignationManagement"));
+const ShiftManagement = lazy(() => import("../components/admin/hr/ShiftManagement"));
+
+// Homework Module Components (Nested)
+const HomeworkHub = lazy(() => import("../components/admin/homework/HomeworkHub"));
+const AddHomework = lazy(() => import("../components/admin/homework/AddHomework"));
+const SubmissionDetails = lazy(() => import("../components/admin/homework/SubmissionDetails"));
+
+// Library Module Components (Nested)
+const LibraryHub = lazy(() => import("../components/admin/library/LibraryHub"));
+const AddBook = lazy(() => import("../components/admin/library/AddBook"));
+const BookList = lazy(() => import("../components/admin/library/BookList"));
+const IssueReturn = lazy(() => import("../components/admin/library/IssueReturn"));
+const AddStudent = lazy(() => import("../components/admin/library/AddStudent"));
+const Category = lazy(() => import("../components/admin/library/Category"));
+const MonthlyReport = lazy(() => import("../components/admin/library/MonthlyReport"));
 
 const TeacherDashboard = lazy(() =>
   import("../pages/teacher/TeacherDashboard"),
@@ -255,15 +292,36 @@ function AppRoutes() {
             <Route path="holidays" element={<HolidayManagement />} />
             <Route path="certificates" element={<CertificateManagement />} />
           </Route>
-          <Route path="hr" element={<ComingSoon title="Human Resource" />} />
-          <Route
-            path="homework"
-            element={<ComingSoon title="Homework Module" />}
-          />
-          <Route
-            path="library"
-            element={<ComingSoon title="Library System" />}
-          />
+          <Route path="hr" element={<HrManagement />}>
+            <Route index element={<HrHub />} />
+            <Route path="add-staff" element={<AddStaff />} />
+            <Route path="directory" element={<StaffDirectory />} />
+            <Route path="manual-attendance" element={<ManualAttendance />} />
+            <Route path="attendance-report" element={<AttendanceReport />} />
+            <Route path="payroll" element={<Payroll />} />
+            <Route path="apply-leave" element={<ApplyLeave />} />
+            <Route path="approve-leave" element={<ApproveLeave />} />
+            <Route path="leave-type" element={<LeaveType />} />
+            <Route path="department" element={<DepartmentManagement />} />
+            <Route path="designation" element={<DesignationManagement />} />
+            <Route path="shift" element={<ShiftManagement />} />
+          </Route>
+          <Route path="homework" element={<HomeworkManagement />}>
+            <Route index element={<HomeworkHub />} />
+            <Route path="add" element={<AddHomework />} />
+            <Route path="submissions" element={<SubmissionDetails />} />
+          </Route>
+
+          <Route path="library" element={<LibraryManagement />}>
+            <Route index element={<LibraryHub />} />
+            <Route path="add-book" element={<AddBook />} />
+            <Route path="book-list" element={<BookList />} />
+            <Route path="issue-return" element={<IssueReturn />} />
+            <Route path="add-student" element={<AddStudent />} />
+            <Route path="category" element={<Category />} />
+            <Route path="monthly-report" element={<MonthlyReport />} />
+          </Route>
+
           <Route
             path="transport"
             element={<ComingSoon title="Transport Management" />}
