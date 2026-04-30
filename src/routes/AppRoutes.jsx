@@ -40,6 +40,21 @@ const HomeworkManagement = lazy(() =>
 const LibraryManagement = lazy(() =>
   import("../pages/admin/library/LibraryManagement"),
 );
+const TransportManagement = lazy(() =>
+  import("../pages/admin/transport/TransportManagement"),
+);
+const ReportsManagement = lazy(() =>
+  import("../pages/admin/reports/ReportsManagement"),
+);
+const CommunicateManagement = lazy(() =>
+  import("../pages/admin/communicate/CommunicateManagement"),
+);
+const ExamManagement = lazy(() =>
+  import("../pages/admin/exam/ExamManagement"),
+);
+const StoreManagement = lazy(() =>
+  import("../pages/admin/store/StoreManagement"),
+);
 const ComingSoon = lazy(() => import("../pages/ComingSoon"));
 
 // Student Module Components (Nested)
@@ -55,7 +70,7 @@ const StudentProfileView = lazy(() =>
   import("../components/admin/student/StudentProfileView"),
 );
 
-const AdmissionReport = lazy(() =>
+const StudentAdmissionReport = lazy(() =>
   import("../components/admin/student/StudentSubModules").then((m) => ({
     default: m.AdmissionReport,
   })),
@@ -167,6 +182,54 @@ const AddStudent = lazy(() => import("../components/admin/library/AddStudent"));
 const Category = lazy(() => import("../components/admin/library/Category"));
 const MonthlyReport = lazy(() => import("../components/admin/library/MonthlyReport"));
 
+// Transport Module Components (Nested)
+const TransportHub = lazy(() => import("../components/admin/transport/TransportHub"));
+const RoutesManagement = lazy(() => import("../components/admin/transport/RoutesManagement"));
+const VehiclesManagement = lazy(() => import("../components/admin/transport/VehiclesManagement"));
+const AssignVehicles = lazy(() => import("../components/admin/transport/AssignVehicles"));
+const TransportReport = lazy(() => import("../components/admin/transport/TransportReport"));
+const AssignStudentTransport = lazy(() => import("../components/admin/transport/AssignStudentTransport"));
+const AddDriver = lazy(() => import("../components/admin/transport/AddDriver"));
+const RouteTimeTable = lazy(() => import("../components/admin/transport/RouteTimeTable"));
+const StoppageManagement = lazy(() => import("../components/admin/transport/StoppageManagement"));
+
+// Reports Module Components (Nested)
+const ReportsHub = lazy(() => import("../components/admin/reports/ReportsHub"));
+const ReportsAdmissionReport = lazy(() => import("../components/admin/reports/AdmissionReport"));
+const TransactionReport = lazy(() => import("../components/admin/reports/TransactionReport"));
+const FeesReport = lazy(() => import("../components/admin/reports/FeesReport"));
+const PayrollReport = lazy(() => import("../components/admin/reports/PayrollReport"));
+
+// Communicate Module Components (Nested)
+const CommunicateHub = lazy(() => import("../components/admin/communicate/CommunicateHub"));
+const NoticeBoard = lazy(() => import("../components/admin/communicate/NoticeBoard"));
+const SendSMS = lazy(() => import("../components/admin/communicate/SendSMS"));
+
+// Examination Module Components (Nested)
+const ExamHub = lazy(() => import("../components/admin/exam/ExamHub"));
+const ExamSchedule = lazy(() => import("../components/admin/exam/ExamSchedule"));
+const AssignMarks = lazy(() => import("../components/admin/exam/AssignMarks"));
+const ExamList = lazy(() => import("../components/admin/exam/ExamList"));
+const SingleResult = lazy(() => import("../components/admin/exam/SingleResult"));
+const AdmitCard = lazy(() => import("../components/admin/exam/AdmitCard"));
+const MarksReport = lazy(() => import("../components/admin/exam/MarksReport"));
+const ExamType = lazy(() => import("../components/admin/exam/ExamType"));
+const Assessment = lazy(() => import("../components/admin/exam/Assessment"));
+const Observation = lazy(() => import("../components/admin/exam/Observation"));
+const ObservationType = lazy(() => import("../components/admin/exam/ObservationType"));
+const ExamGrade = lazy(() => import("../components/admin/exam/ExamGrade"));
+const ExamInstruction = lazy(() => import("../components/admin/exam/ExamInstruction"));
+
+// Store Module Components (Nested)
+const StoreHub = lazy(() => import("../components/admin/store/StoreHub"));
+const VendorManagement = lazy(() => import("../components/admin/store/VendorManagement"));
+const ProductManagement = lazy(() => import("../components/admin/store/ProductManagement"));
+const CategoryManagement = lazy(() => import("../components/admin/store/CategoryManagement"));
+const SubCategoryManagement = lazy(() => import("../components/admin/store/SubCategoryManagement"));
+const InventoryTransactions = lazy(() => import("../components/admin/store/InventoryTransactions"));
+const UnitManagement = lazy(() => import("../components/admin/store/UnitManagement"));
+const SellsReports = lazy(() => import("../components/admin/store/SellsReports"));
+
 const TeacherDashboard = lazy(() =>
   import("../pages/teacher/TeacherDashboard"),
 );
@@ -249,7 +312,7 @@ function AppRoutes() {
             <Route path="add" element={<StudentForm />} />
             <Route path="edit/:id" element={<StudentForm />} />
             <Route path="view/:id" element={<StudentProfileView />} />
-            <Route path="admission-report" element={<AdmissionReport />} />
+            <Route path="admission-report" element={<StudentAdmissionReport />} />
             <Route path="history" element={<StudentHistory />} />
             <Route
               path="login-credentials"
@@ -322,26 +385,59 @@ function AppRoutes() {
             <Route path="monthly-report" element={<MonthlyReport />} />
           </Route>
 
-          <Route
-            path="transport"
-            element={<ComingSoon title="Transport Management" />}
-          />
-          <Route
-            path="reports"
-            element={<ComingSoon title="Report Center" />}
-          />
-          <Route
-            path="communicate"
-            element={<ComingSoon title="Communication Center" />}
-          />
-          <Route
-            path="exam"
-            element={<ComingSoon title="Examination Center" />}
-          />
-          <Route
-            path="store"
-            element={<ComingSoon title="Inventory Store" />}
-          />
+          <Route path="transport" element={<TransportManagement />}>
+            <Route index element={<TransportHub />} />
+            <Route path="routes" element={<RoutesManagement />} />
+            <Route path="vehicles" element={<VehiclesManagement />} />
+            <Route path="assign-vehicles" element={<AssignVehicles />} />
+            <Route path="report" element={<TransportReport />} />
+            <Route path="assign-student" element={<AssignStudentTransport />} />
+            <Route path="drivers" element={<AddDriver />} />
+            <Route path="timetable" element={<RouteTimeTable />} />
+            <Route path="stoppage" element={<StoppageManagement />} />
+          </Route>
+
+          <Route path="reports" element={<ReportsManagement />}>
+            <Route index element={<ReportsHub />} />
+            <Route path="admissions" element={<ReportsAdmissionReport />} />
+            <Route path="transactions" element={<TransactionReport />} />
+            <Route path="fees" element={<FeesReport />} />
+            <Route path="payroll" element={<PayrollReport />} />
+          </Route>
+
+          <Route path="communicate" element={<CommunicateManagement />}>
+            <Route index element={<CommunicateHub />} />
+            <Route path="notice-board" element={<NoticeBoard />} />
+            <Route path="sms" element={<SendSMS />} />
+          </Route>
+
+          <Route path="exam" element={<ExamManagement />}>
+            <Route index element={<ExamHub />} />
+            <Route path="schedule" element={<ExamSchedule />} />
+            <Route path="assign-marks" element={<AssignMarks />} />
+            <Route path="exam-list" element={<ExamList />} />
+            <Route path="single-result" element={<SingleResult />} />
+            <Route path="admit-card" element={<AdmitCard />} />
+            <Route path="marks-report" element={<MarksReport />} />
+            <Route path="exam-type" element={<ExamType />} />
+            <Route path="assessment" element={<Assessment />} />
+            <Route path="observation" element={<Observation />} />
+            <Route path="observation-type" element={<ObservationType />} />
+            <Route path="exam-grade" element={<ExamGrade />} />
+            <Route path="exam-instruction" element={<ExamInstruction />} />
+          </Route>
+
+          <Route path="store" element={<StoreManagement />}>
+            <Route index element={<StoreHub />} />
+            <Route path="vendors" element={<VendorManagement />} />
+            <Route path="products" element={<ProductManagement />} />
+            <Route path="category" element={<CategoryManagement />} />
+            <Route path="sub-category" element={<SubCategoryManagement />} />
+            <Route path="transactions" element={<InventoryTransactions />} />
+            <Route path="units" element={<UnitManagement />} />
+            <Route path="reports" element={<SellsReports />} />
+          </Route>
+
           <Route
             path="gallery"
             element={<ComingSoon title="Media Gallery" />}
